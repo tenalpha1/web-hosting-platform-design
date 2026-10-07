@@ -27,7 +27,7 @@ async function ensureSchema() {
       name           TEXT        NOT NULL,
       email          TEXT        NOT NULL UNIQUE,
       password_hash  TEXT        NOT NULL,
-      plan           TEXT        NOT NULL DEFAULT 'launch',
+      plan           TEXT        NOT NULL DEFAULT 'starter',
       billing        TEXT        NOT NULL DEFAULT 'yearly',
       desired_domain TEXT,
       status         TEXT        NOT NULL DEFAULT 'pending',

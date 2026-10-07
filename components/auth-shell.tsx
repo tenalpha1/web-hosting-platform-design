@@ -34,13 +34,13 @@ export function AuthShell({
           <h2 className="text-5xl font-bold leading-[1.02] tracking-[-0.065em] xl:text-6xl">A faster home<br />for your <span className="text-[#70a0ff]">website.</span></h2>
           <p className="mt-7 max-w-md text-lg leading-8 text-white/60">Everything you need to launch, manage, and grow online — without the technical maze.</p>
           <div className="mt-9 flex flex-col gap-4 text-sm font-medium text-white/75">
-            {['Free SSL and automatic backups', 'Fast, reliable hosting built to scale', '30-day money-back guarantee'].map((item) => (
+            {['Free SSL on every website', 'cPanel with 1-click WordPress', 'Indigenous-owned Canadian business'].map((item) => (
               <span key={item} className="flex items-center gap-3"><span className="flex size-7 items-center justify-center rounded-full bg-[#3067f1]/20 text-[#8db1ff]"><Check size={15} /></span> {item}</span>
             ))}
           </div>
         </div>
 
-        <p className="relative text-sm text-white/40">Trusted by creators, founders, and growing teams.</p>
+        <p className="relative text-sm text-white/40">A BGW Film Studios company.</p>
       </section>
 
       <section className="relative flex w-full items-center justify-center px-6 py-10 sm:px-10 lg:w-[52%] lg:px-14 xl:px-24">

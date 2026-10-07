@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { AuthShell } from '@/components/auth-shell'
 import { getCurrentUser } from '@/lib/auth'
-import { isBilling, isPlanId } from '@/lib/plans'
+import { isBilling, isPlanId, LEGACY_PLAN_IDS } from '@/lib/plans'
 import { SignupForm } from './signup-form'
 
 export const metadata: Metadata = { title: 'Create your account — BGW Host' }
@@ -17,7 +17,8 @@ export default async function SignupPage({
   if (user) redirect('/dashboard')
 
   const params = await searchParams
-  const plan = isPlanId(params.plan) ? params.plan : 'grow'
+  const requested = params.plan && params.plan in LEGACY_PLAN_IDS ? LEGACY_PLAN_IDS[params.plan] : params.plan
+  const plan = isPlanId(requested) ? requested : 'plus'
   const billing = isBilling(params.billing) ? params.billing : 'yearly'
   const domain = (params.domain ?? '').slice(0, 253)
 
