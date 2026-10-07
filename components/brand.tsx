@@ -16,9 +16,9 @@ export function Brand({ size = 'md', light = false }: { size?: 'sm' | 'md'; ligh
 }
 
 export const inputClass =
-  'w-full rounded-lg border border-[#dfe4ef] bg-white px-4 py-3 text-sm text-[#12182b] outline-none transition placeholder:text-[#a2aabc] focus:border-[#3067f1] focus:ring-3 focus:ring-[#3067f1]/15'
+  'h-12 w-full rounded-xl border border-[#dfe4ef] bg-white px-4 text-sm text-[#12182b] outline-none transition placeholder:text-[#a2aabc] focus:border-[#3067f1] focus:ring-4 focus:ring-[#3067f1]/10'
 
-export const labelClass = 'mb-1.5 block text-sm font-semibold text-[#30384d]'
+export const labelClass = 'mb-2 block text-sm font-semibold text-[#30384d]'
 
 export const primaryButtonClass =
-  'inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#3067f1] px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-blue-200 transition hover:bg-[#2457d7] disabled:cursor-wait disabled:opacity-70'
+  'mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3067f1] text-sm font-bold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-[#2457d7] disabled:translate-y-0 disabled:cursor-wait disabled:opacity-70'

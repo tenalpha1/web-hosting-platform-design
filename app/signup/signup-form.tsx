@@ -123,14 +123,14 @@ export function SignupForm({
       <button type="submit" disabled={pending} className={primaryButtonClass}>
         {pending ? 'Creating your account…' : (
           <>
-            Create my account <ArrowRight size={17} />
+            Create account <ArrowRight size={17} />
           </>
         )}
       </button>
 
-      <p className="text-center text-sm text-[#626b80]">
+      <p className="text-center text-sm text-[#747d91]">
         Already have an account?{' '}
-        <Link href="/login" className="font-semibold text-[#3067f1] hover:underline">Log in</Link>
+        <Link href="/login" className="font-bold text-[#3067f1] hover:text-[#2457d7]">Sign in</Link>
       </p>
     </form>
   )

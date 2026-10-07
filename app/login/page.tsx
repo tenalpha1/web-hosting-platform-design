@@ -12,7 +12,7 @@ export default async function LoginPage() {
   if (user) redirect('/dashboard')
 
   return (
-    <AuthShell title="Welcome back" subtitle="Log in to manage your hosting.">
+    <AuthShell mode="signin" title="Welcome back." subtitle="Sign in to manage your websites and hosting.">
       <LoginForm />
     </AuthShell>
   )

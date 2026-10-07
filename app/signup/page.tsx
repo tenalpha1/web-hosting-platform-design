@@ -22,7 +22,7 @@ export default async function SignupPage({
   const domain = (params.domain ?? '').slice(0, 253)
 
   return (
-    <AuthShell title="Create your account" subtitle="Get your website online in a few minutes.">
+    <AuthShell mode="signup" title="Create your account." subtitle="Start building your next big thing with Cloudnest.">
       <SignupForm initialPlan={plan} initialBilling={billing} initialDomain={domain} />
     </AuthShell>
   )

@@ -21,7 +21,7 @@ export function LoginForm() {
       </div>
 
       <div>
-        <div className="mb-1.5 flex items-center justify-between">
+        <div className="mb-2 flex items-center justify-between">
           <label htmlFor="password" className="text-sm font-semibold text-[#30384d]">Password</label>
           <a href={`mailto:${SUPPORT_EMAIL}?subject=Cloudnest%20password%20reset`} className="text-xs font-semibold text-[#3067f1] hover:underline">
             Forgot password?
@@ -31,16 +31,16 @@ export function LoginForm() {
       </div>
 
       <button type="submit" disabled={pending} className={primaryButtonClass}>
-        {pending ? 'Logging in…' : (
+        {pending ? 'Signing in…' : (
           <>
-            Log in <ArrowRight size={17} />
+            Sign in <ArrowRight size={17} />
           </>
         )}
       </button>
 
-      <p className="text-center text-sm text-[#626b80]">
-        New to Cloudnest?{' '}
-        <Link href="/signup" className="font-semibold text-[#3067f1] hover:underline">Create an account</Link>
+      <p className="text-center text-sm text-[#747d91]">
+        Don&apos;t have an account?{' '}
+        <Link href="/signup" className="font-bold text-[#3067f1] hover:text-[#2457d7]">Sign up</Link>
       </p>
     </form>
   )
