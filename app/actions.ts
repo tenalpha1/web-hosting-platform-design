@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createSession, destroySession, getCurrentUser, hashPassword, verifyPassword } from '@/lib/auth'
+import { isAdmin, isStatus } from '@/lib/admin'
 import { db } from '@/lib/db'
 import { isBilling, isPlanId } from '@/lib/plans'
 
@@ -20,6 +21,10 @@ function text(formData: FormData, key: string) {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+function normalizeDomain(value: string) {
+  return value.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')
+}
+
 function serviceError(error: unknown): FormState {
   console.error('[cloudnest] database error', error)
   return { error: 'We could not reach our servers just now. Please try again in a minute.' }
@@ -33,7 +38,7 @@ export async function signup(_prev: FormState, formData: FormData): Promise<Form
   const password = typeof formData.get('password') === 'string' ? (formData.get('password') as string) : ''
   const plan = text(formData, 'plan')
   const billing = text(formData, 'billing')
-  const domain = text(formData, 'domain').toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')
+  const domain = normalizeDomain(text(formData, 'domain'))
   const values = { name, email, plan, billing, domain }
 
   if (!name || name.length > 100) return { error: 'Please enter your name.', values }
@@ -116,4 +121,40 @@ export async function changePlan(_prev: FormState, formData: FormData): Promise<
 
   revalidatePath('/dashboard')
   return { message: 'Your plan has been updated.' }
+}
+
+/* ---------- Customer: set the domain for their site ---------- */
+
+export async function updateDomain(_prev: FormState, formData: FormData): Promise<FormState> {
+  const domain = normalizeDomain(text(formData, 'domain'))
+  if (!DOMAIN_PATTERN.test(domain)) return { error: 'That domain doesn’t look right. Try something like yourname.com.', values: { domain } }
+
+  try {
+    const user = await getCurrentUser()
+    if (!user) return { error: 'Your session has ended. Please log in again.' }
+    const sql = await db()
+    await sql`UPDATE cloudnest_users SET desired_domain = ${domain} WHERE id = ${user.id}`
+  } catch (error) {
+    return serviceError(error)
+  }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/admin')
+  return { message: 'Domain saved.' }
+}
+
+/* ---------- Admin: change a customer's hosting status ---------- */
+
+export async function setCustomerStatus(formData: FormData) {
+  const id = Number(text(formData, 'id'))
+  const status = text(formData, 'status')
+  if (!Number.isInteger(id) || id <= 0 || !isStatus(status)) return
+
+  const user = await getCurrentUser()
+  if (!isAdmin(user)) return
+
+  const sql = await db()
+  await sql`UPDATE cloudnest_users SET status = ${status} WHERE id = ${id}`
+  revalidatePath('/admin')
+  revalidatePath('/dashboard')
 }

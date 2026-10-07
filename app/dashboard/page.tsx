@@ -1,11 +1,14 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { Check, Clock, Globe2, LifeBuoy, LogOut, Mail, PartyPopper, UserRound } from 'lucide-react'
+import Link from 'next/link'
+import { Ban, Check, Clock, Globe2, LifeBuoy, LogOut, Mail, PartyPopper, ShieldCheck, UserRound } from 'lucide-react'
 import { logout } from '@/app/actions'
 import { Brand } from '@/components/brand'
+import { isAdmin } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
 import { getPlan, priceFor, SUPPORT_EMAIL } from '@/lib/plans'
 import { ChangePlan } from './change-plan'
+import { DomainForm } from './domain-form'
 
 export const metadata: Metadata = { title: 'Your dashboard — BGW Host' }
 export const dynamic = 'force-dynamic'
@@ -23,6 +26,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const firstName = user.name.split(' ')[0]
   const memberSince = new Date(user.created_at).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' })
   const ready = user.status === 'active'
+  const suspended = user.status === 'suspended'
+  const admin = isAdmin(user)
 
   return (
     <main className="min-h-screen bg-[#fbfcff] text-[#12182b]">
@@ -30,7 +35,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div className="mx-auto flex h-[70px] max-w-6xl items-center justify-between px-6">
           <Brand />
           <div className="flex items-center gap-4">
-            <span className="hidden text-sm text-[#626b80] sm:inline">{user.email}</span>
+            <span className="hidden text-sm text-[#626b80] md:inline">{user.email}</span>
+            {admin && (
+              <Link href="/admin" className="inline-flex items-center gap-2 rounded-lg bg-[#1b2340] px-3 py-2 text-sm font-semibold text-white transition hover:bg-[#2a3560]">
+                <ShieldCheck size={15} /> Admin
+              </Link>
+            )}
             <form action={logout}>
               <button type="submit" className="inline-flex items-center gap-2 rounded-lg border border-[#dfe4ef] px-3 py-2 text-sm font-semibold text-[#30384d] transition hover:border-[#b9c8ed]">
                 <LogOut size={15} /> Log out
@@ -59,13 +69,22 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs font-medium uppercase tracking-[0.14em] text-white/55">Your website</p>
-                <h2 id="site-heading" className="mt-2 text-2xl font-bold">{user.desired_domain ?? 'No domain chosen yet'}</h2>
+                <h2 id="site-heading" className="mt-2 break-all text-2xl font-bold">{user.desired_domain ?? 'No domain chosen yet'}</h2>
               </div>
-              <Globe2 className="text-[#8db1ff]" />
+              <Globe2 className="shrink-0 text-[#8db1ff]" />
             </div>
+            <DomainForm current={user.desired_domain} />
             <div className="mt-8 flex items-center gap-3 rounded-xl bg-white/5 p-4">
               {ready ? (
                 <><span className="size-2.5 rounded-full bg-[#38b47d]" /><span className="text-sm font-semibold">Live and running</span></>
+              ) : suspended ? (
+                <>
+                  <Ban size={18} className="shrink-0 text-[#ffb4ae]" />
+                  <div>
+                    <p className="text-sm font-semibold">Your hosting is paused</p>
+                    <p className="text-xs text-white/55">Please contact support and we’ll help you get it running again.</p>
+                  </div>
+                </>
               ) : (
                 <>
                   <Clock size={18} className="shrink-0 text-[#8db1ff]" />
