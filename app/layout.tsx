@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Cloudnest — Web hosting, made simple',
+  title: 'BGW Host — Web hosting, made simple',
   description: 'Fast, secure, and affordable web hosting for growing websites.',
   generator: 'v0.app',
   icons: {

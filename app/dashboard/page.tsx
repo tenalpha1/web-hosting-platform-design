@@ -7,7 +7,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { getPlan, priceFor, SUPPORT_EMAIL } from '@/lib/plans'
 import { ChangePlan } from './change-plan'
 
-export const metadata: Metadata = { title: 'Your dashboard — Cloudnest' }
+export const metadata: Metadata = { title: 'Your dashboard — BGW Host' }
 export const dynamic = 'force-dynamic'
 
 const cardBase = 'rounded-2xl border p-6 sm:p-7'
@@ -45,7 +45,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <div className="mb-8 flex items-start gap-4 rounded-2xl border border-[#cbd9ff] bg-[#f0f4ff] p-5">
             <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#3067f1] text-white"><PartyPopper size={20} /></span>
             <div>
-              <p className="font-bold">Welcome to Cloudnest, {firstName}!</p>
+              <p className="font-bold">Welcome to BGW Host, {firstName}!</p>
               <p className="mt-1 text-sm text-[#626b80]">Your account is created. We’re setting up your hosting now and will email {user.email} as soon as it’s ready.</p>
             </div>
           </div>
@@ -113,7 +113,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <h2 id="help-heading" className="text-lg font-bold">Need a hand?</h2>
             </div>
             <p className="mt-4 text-sm text-[#626b80]">Real people, ready to help with anything from domains to email.</p>
-            <a href={`mailto:${SUPPORT_EMAIL}?subject=Cloudnest%20support`} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#3067f1] hover:underline">
+            <a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Host%20support`} className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#3067f1] hover:underline">
               <Mail size={16} /> Contact support
             </a>
           </section>

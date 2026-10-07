@@ -4,7 +4,7 @@ import { AuthShell } from '@/components/auth-shell'
 import { getCurrentUser } from '@/lib/auth'
 import { LoginForm } from './login-form'
 
-export const metadata: Metadata = { title: 'Log in — Cloudnest' }
+export const metadata: Metadata = { title: 'Log in — BGW Host' }
 export const dynamic = 'force-dynamic'
 
 export default async function LoginPage() {

@@ -23,7 +23,7 @@ export function LoginForm() {
       <div>
         <div className="mb-2 flex items-center justify-between">
           <label htmlFor="password" className="text-sm font-semibold text-[#30384d]">Password</label>
-          <a href={`mailto:${SUPPORT_EMAIL}?subject=Cloudnest%20password%20reset`} className="text-xs font-semibold text-[#3067f1] hover:underline">
+          <a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Host%20password%20reset`} className="text-xs font-semibold text-[#3067f1] hover:underline">
             Forgot password?
           </a>
         </div>

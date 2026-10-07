@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { isBilling, isPlanId } from '@/lib/plans'
 import { SignupForm } from './signup-form'
 
-export const metadata: Metadata = { title: 'Create your account — Cloudnest' }
+export const metadata: Metadata = { title: 'Create your account — BGW Host' }
 export const dynamic = 'force-dynamic'
 
 export default async function SignupPage({
@@ -22,7 +22,7 @@ export default async function SignupPage({
   const domain = (params.domain ?? '').slice(0, 253)
 
   return (
-    <AuthShell mode="signup" title="Create your account." subtitle="Start building your next big thing with Cloudnest.">
+    <AuthShell mode="signup" title="Create your account." subtitle="Start building your next big thing with BGW Host.">
       <SignupForm initialPlan={plan} initialBilling={billing} initialDomain={domain} />
     </AuthShell>
   )

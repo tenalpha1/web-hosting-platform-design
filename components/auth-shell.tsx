@@ -24,9 +24,9 @@ export function AuthShell({
       <section className="relative hidden w-[48%] flex-col justify-between overflow-hidden bg-[#1b2340] p-10 text-white lg:flex xl:p-14">
         <div className="absolute -right-24 top-16 size-72 rounded-full border border-white/10" aria-hidden="true" />
         <div className="absolute -right-8 top-32 size-40 rounded-full border border-white/10" aria-hidden="true" />
-        <Link href="/" className="relative flex items-center gap-2 text-white" aria-label="Cloudnest home">
+        <Link href="/" className="relative flex items-center gap-2 text-white" aria-label="BGW Host home">
           <span className="flex size-10 items-center justify-center rounded-xl bg-[#3067f1] shadow-xl shadow-blue-950/30"><Sparkles size={20} fill="currentColor" /></span>
-          <span className="text-[22px] font-bold tracking-[-0.04em]">cloudnest</span>
+          <span className="text-[22px] font-bold tracking-[-0.04em]">BGW <span className="text-[#70a0ff]">Host</span></span>
         </Link>
 
         <div className="relative max-w-lg">
@@ -45,9 +45,9 @@ export function AuthShell({
 
       <section className="relative flex w-full items-center justify-center px-6 py-10 sm:px-10 lg:w-[52%] lg:px-14 xl:px-24">
         <div className="w-full max-w-[430px]">
-          <Link href="/" className="mb-10 flex items-center justify-center gap-2 lg:hidden" aria-label="Cloudnest home">
+          <Link href="/" className="mb-10 flex items-center justify-center gap-2 lg:hidden" aria-label="BGW Host home">
             <span className="flex size-9 items-center justify-center rounded-xl bg-[#3067f1] text-white shadow-lg shadow-blue-200"><Sparkles size={18} fill="currentColor" /></span>
-            <span className="text-[21px] font-bold tracking-[-0.04em]">cloudnest</span>
+            <span className="text-[21px] font-bold tracking-[-0.04em]">BGW <span className="text-[#3067f1]">Host</span></span>
           </Link>
 
           <div className="mb-8">

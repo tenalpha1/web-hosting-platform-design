@@ -117,7 +117,7 @@ export function SignupForm({
 
       <label className="flex items-start gap-3 text-sm text-[#626b80]">
         <input type="checkbox" name="terms" required className="mt-0.5 size-4 accent-[#3067f1]" />
-        <span>I agree to the Cloudnest terms of service and privacy policy.</span>
+        <span>I agree to the BGW Host terms of service and privacy policy.</span>
       </label>
 
       <button type="submit" disabled={pending} className={primaryButtonClass}>
