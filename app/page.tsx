@@ -16,9 +16,9 @@ export default function Page() {
       <section className="relative hidden w-[48%] flex-col justify-between overflow-hidden bg-[#1b2340] p-10 text-white lg:flex xl:p-14">
         <div className="absolute -right-24 top-16 size-72 rounded-full border border-white/10" aria-hidden="true" />
         <div className="absolute -right-8 top-32 size-40 rounded-full border border-white/10" aria-hidden="true" />
-        <a href="#home" className="flex items-center gap-2 text-white" aria-label="Cloudnest home">
+        <a href="#home" className="flex items-center gap-2 text-white" aria-label="BGW Domains home">
           <span className="flex size-10 items-center justify-center rounded-xl bg-[#3067f1] shadow-xl shadow-blue-950/30"><Sparkles size={20} fill="currentColor" /></span>
-          <span className="text-[22px] font-bold tracking-[-0.04em]">cloudnest</span>
+          <span className="text-[22px] font-bold tracking-[-0.04em]">bgwdomains.com</span>
         </a>
 
         <div className="relative max-w-lg">
@@ -36,15 +36,15 @@ export default function Page() {
 
       <section className="relative flex w-full items-center justify-center px-6 py-10 sm:px-10 lg:w-[52%] lg:px-14 xl:px-24">
         <div className="w-full max-w-[430px]">
-          <a href="#home" className="mb-12 flex items-center justify-center gap-2 lg:hidden" aria-label="Cloudnest home">
+          <a href="#home" className="mb-12 flex items-center justify-center gap-2 lg:hidden" aria-label="BGW Domains home">
             <span className="flex size-9 items-center justify-center rounded-xl bg-[#3067f1] text-white shadow-lg shadow-blue-200"><Sparkles size={18} fill="currentColor" /></span>
-            <span className="text-[21px] font-bold tracking-[-0.04em]">cloudnest</span>
+            <span className="text-[21px] font-bold tracking-[-0.04em]">bgwdomains.com</span>
           </a>
 
           <div className="mb-9">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#3067f1]">Your account</p>
             <h2 className="mt-3 text-4xl font-bold tracking-[-0.055em]">{isSignUp ? 'Create your account.' : 'Welcome back.'}</h2>
-            <p className="mt-3 text-[15px] leading-6 text-[#747d91]">{isSignUp ? 'Start building your next big thing with Cloudnest.' : 'Sign in to manage your websites and hosting.'}</p>
+            <p className="mt-3 text-[15px] leading-6 text-[#747d91]">{isSignUp ? 'Start building your next big thing with BGW Domains.' : 'Sign in to manage your websites and hosting.'}</p>
           </div>
 
           <div className="mb-8 flex rounded-xl bg-[#edf2ff] p-1" role="tablist" aria-label="Account access">
