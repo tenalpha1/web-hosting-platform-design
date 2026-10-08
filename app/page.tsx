@@ -1,71 +1,91 @@
 'use client'
 
-import Image from 'next/image'
 import { useState } from 'react'
-import { ArrowRight, Check, Eye, EyeOff, ShieldCheck, Zap } from 'lucide-react'
+import {
+  ArrowRight,
+  Check,
+  ChevronDown,
+  Globe2,
+  Headphones,
+  Menu,
+  ShieldCheck,
+  X,
+  Zap,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { CURRENCY, formatPrice, lowestPrice, plans, SUPPORT_EMAIL } from '@/lib/plans'
 
 export default function Page() {
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin')
-  const [showPassword, setShowPassword] = useState(false)
-  const isSignUp = mode === 'signup'
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [billing, setBilling] = useState<'monthly' | 'yearly'>('yearly')
+  const [domain, setDomain] = useState('')
+  const router = useRouter()
+  const cleanDomain = domain.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')
+  const searchDomain = (event: React.FormEvent) => {
+    event.preventDefault()
+    router.push(cleanDomain ? `/signup?domain=${encodeURIComponent(cleanDomain)}` : '/signup')
+  }
 
   return (
-    <main className="relative flex min-h-screen overflow-hidden bg-[#f8faff] text-[#12182b]">
-      <div className="absolute -left-36 -top-36 size-[500px] rounded-full bg-[#dce8ff] blur-3xl" aria-hidden="true" />
-      <div className="absolute -bottom-48 -right-24 size-[520px] rounded-full bg-[#eee9ff] blur-3xl" aria-hidden="true" />
+    <main className="min-h-screen overflow-hidden bg-[#fbfcff] text-[#12182b]">
+      <div className="bg-[#18122d] px-6 py-2 text-center text-xs font-medium tracking-wide text-white/80">
+        Launch your site today — hosting from ${formatPrice(lowestPrice)}/mo
+      </div>
 
-      <section className="relative hidden w-[48%] flex-col justify-between overflow-hidden bg-[#1b2340] p-10 text-white lg:flex xl:p-14">
-        <div className="absolute -right-24 top-16 size-72 rounded-full border border-white/10" aria-hidden="true" />
-        <div className="absolute -right-8 top-32 size-40 rounded-full border border-white/10" aria-hidden="true" />
-        <a href="#home" className="flex items-center" aria-label="BGW Domains home">
-          <span className="flex h-20 w-[300px] items-center justify-center overflow-hidden rounded-xl bg-white px-2">
-            <Image src="/bgw-domain-logo.png" alt="BGW Domain" width={1908} height={568} className="h-auto w-full object-contain" priority />
-          </span>
-        </a>
-
-        <div className="relative max-w-lg">
-          <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#8db1ff]/30 bg-white/5 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#a9c3ff]"><Zap size={13} fill="currentColor" /> Hosting, made simple</div>
-          <h1 className="text-5xl font-bold leading-[1.02] tracking-[-0.065em] xl:text-6xl">A faster home<br />for your <span className="text-[#70a0ff]">website.</span></h1>
-          <p className="mt-7 max-w-md text-lg leading-8 text-white/60">Everything you need to launch, manage, and grow online — without the technical maze.</p>
-          <div className="mt-9 flex flex-col gap-4 text-sm font-medium text-white/75">
-            <span className="flex items-center gap-3"><span className="flex size-7 items-center justify-center rounded-full bg-[#3067f1]/20 text-[#8db1ff]"><Check size={15} /></span> Free SSL and automatic backups</span>
-            <span className="flex items-center gap-3"><span className="flex size-7 items-center justify-center rounded-full bg-[#3067f1]/20 text-[#8db1ff]"><Check size={15} /></span> Fast, reliable hosting built to scale</span>
-          </div>
-        </div>
-
-        <p className="text-sm text-white/40">Trusted by creators, founders, and growing teams.</p>
-      </section>
-
-      <section className="relative flex w-full items-center justify-center px-6 py-10 sm:px-10 lg:w-[52%] lg:px-14 xl:px-24">
-        <div className="w-full max-w-[430px]">
-          <a href="#home" className="mb-12 flex items-center justify-center lg:hidden" aria-label="BGW Domains home">
-            <span className="flex h-14 w-[220px] overflow-hidden rounded-xl bg-white">
-              <Image src="/bgw-domain-logo.png" alt="BGW Domain" width={620} height={184} className="h-[184px] w-[620px] max-w-none -translate-x-[118px] -translate-y-[50px] object-cover" priority />
-            </span>
+      <header className="relative z-10 border-b border-[#e7eaf2] bg-white/90 backdrop-blur">
+        <div className="mx-auto flex h-[78px] max-w-7xl items-center justify-between px-6 lg:px-10">
+          <a href="#top" className="flex items-center gap-2" aria-label="BGW Host home">
+            <img src="/brand/bgw-host-logo.png" alt="BGW Host" width={840} height={195} className="h-9 w-auto" />
           </a>
-
-          <div className="mb-9">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#3067f1]">Your account</p>
-            <h2 className="mt-3 text-4xl font-bold tracking-[-0.055em]">{isSignUp ? 'Create your account.' : 'Welcome back.'}</h2>
-            <p className="mt-3 text-[15px] leading-6 text-[#747d91]">{isSignUp ? 'Start building your next big thing with BGW Domains.' : 'Sign in to manage your websites and hosting.'}</p>
+          <nav className="hidden items-center gap-8 text-sm font-medium text-[#525a70] md:flex" aria-label="Main navigation">
+            <a href="#plans" className="transition hover:text-[#3067f1]">Hosting</a>
+            <a href="#features" className="transition hover:text-[#3067f1]">Why BGW Host</a>
+            <a href="#support" className="transition hover:text-[#3067f1]">Support</a>
+          </nav>
+          <div className="hidden items-center gap-5 md:flex">
+            <Link href="/login" className="text-sm font-semibold text-[#525a70] hover:text-[#3067f1]">Log in</Link>
+            <Link href="/signup" className="rounded-lg bg-[#3067f1] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-[#2457d7]">Get started</Link>
           </div>
+          <button className="rounded-lg p-2 text-[#12182b] md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation" aria-expanded={menuOpen}>
+            {menuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
+        {menuOpen && <nav className="flex flex-col gap-4 border-t border-[#e7eaf2] bg-white px-6 py-5 text-sm font-semibold md:hidden"><a href="#plans" onClick={() => setMenuOpen(false)}>Hosting</a><a href="#features" onClick={() => setMenuOpen(false)}>Why BGW Host</a><a href="#support" onClick={() => setMenuOpen(false)}>Support</a><Link href="/login">Log in</Link><Link href="/signup" className="text-[#3067f1]">Get started <ArrowRight className="inline" size={15} /></Link></nav>}
+      </header>
 
-          <div className="mb-8 flex rounded-xl bg-[#edf2ff] p-1" role="tablist" aria-label="Account access">
-            <button type="button" role="tab" aria-selected={!isSignUp} onClick={() => setMode('signin')} className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition ${!isSignUp ? 'bg-white text-[#12182b] shadow-sm' : 'text-[#747d91] hover:text-[#3067f1]'}`}>Sign in</button>
-            <button type="button" role="tab" aria-selected={isSignUp} onClick={() => setMode('signup')} className={`flex-1 rounded-lg px-4 py-2.5 text-sm font-bold transition ${isSignUp ? 'bg-white text-[#12182b] shadow-sm' : 'text-[#747d91] hover:text-[#3067f1]'}`}>Register</button>
+      <section id="top" className="relative">
+        <div className="absolute -right-32 -top-24 size-[460px] rounded-full bg-[#dce8ff] blur-3xl" aria-hidden="true" />
+        <div className="absolute -left-20 top-44 size-[300px] rounded-full bg-[#eee9ff] blur-3xl" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 pb-24 pt-20 lg:grid-cols-[1.03fr_.97fr] lg:px-10 lg:pb-32 lg:pt-28">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#cbd9ff] bg-white px-3.5 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3067f1]"><Zap size={13} fill="currentColor" /> Hosting, made simple</div>
+            <h1 className="max-w-[650px] text-5xl font-bold leading-[1.02] tracking-[-0.065em] text-[#12182b] sm:text-6xl lg:text-[74px]">A faster home<br />for your <span className="text-[#3067f1]">website.</span></h1>
+            <p className="mt-7 max-w-[520px] text-lg leading-8 text-[#626b80]">Reliable, secure web hosting for people who want to get online without the technical maze.</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row"><a href="#plans" className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#3067f1] px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-blue-200 transition hover:-translate-y-1 hover:bg-[#2457d7]">Explore plans <ArrowRight size={17} /></a><a href="#features" className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#dfe4ef] bg-white px-6 py-3.5 text-sm font-bold text-[#30384d] transition hover:border-[#b9c8ed]">See why BGW Host works</a></div>
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-[#626b80]"><span className="inline-flex items-center gap-2"><Check size={16} className="text-[#3067f1]" /> Indigenous-owned Canadian business</span><span className="inline-flex items-center gap-2"><Check size={16} className="text-[#3067f1]" /> Free SSL on every site</span></div>
           </div>
-
-          <form className="flex flex-col gap-5" onSubmit={(event) => event.preventDefault()}>
-            {isSignUp && <div><label htmlFor="name" className="mb-2 block text-sm font-semibold text-[#30384d]">Full name</label><input id="name" type="text" autoComplete="name" placeholder="Alex Morgan" className="h-12 w-full rounded-xl border border-[#dfe4ef] bg-white px-4 text-sm outline-none transition placeholder:text-[#a2aabc] focus:border-[#3067f1] focus:ring-4 focus:ring-[#3067f1]/10" /></div>}
-            <div><label htmlFor="email" className="mb-2 block text-sm font-semibold text-[#30384d]">Email</label><input id="email" type="email" autoComplete="email" placeholder="you@example.com" required className="h-12 w-full rounded-xl border border-[#dfe4ef] bg-white px-4 text-sm outline-none transition placeholder:text-[#a2aabc] focus:border-[#3067f1] focus:ring-4 focus:ring-[#3067f1]/10" /></div>
-            <div><div className="mb-2 flex items-center justify-between"><label htmlFor="password" className="text-sm font-semibold text-[#30384d]">Password</label>{!isSignUp && <a href="#forgot" className="text-xs font-semibold text-[#3067f1] hover:text-[#2457d7]">Forgot password?</a>}</div><div className="relative"><input id="password" type={showPassword ? 'text' : 'password'} autoComplete={isSignUp ? 'new-password' : 'current-password'} placeholder="Enter your password" required className="h-12 w-full rounded-xl border border-[#dfe4ef] bg-white px-4 pr-12 text-sm outline-none transition placeholder:text-[#a2aabc] focus:border-[#3067f1] focus:ring-4 focus:ring-[#3067f1]/10" /><button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-[#8992a7] hover:text-[#3067f1]" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div></div>
-            <button type="submit" className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#3067f1] text-sm font-bold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-[#2457d7]">{isSignUp ? 'Create account' : 'Sign In'} <ArrowRight size={17} /></button>
-          </form>
-
-          <div className="mt-8 flex items-center justify-center gap-2 text-xs font-medium text-[#8992a7]"><ShieldCheck size={15} className="text-[#3067f1]" /> Your data is protected with secure encryption</div>
-          <p className="mt-8 text-center text-sm text-[#747d91]">{isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}<button type="button" onClick={() => setMode(isSignUp ? 'signin' : 'signup')} className="font-bold text-[#3067f1] hover:text-[#2457d7]">{isSignUp ? 'Sign in' : 'Sign up'}</button></p>
+          <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto">
+            <div className="absolute inset-8 rounded-[38px] bg-[#dce8ff] blur-2xl" aria-hidden="true" />
+            <div className="relative rounded-[28px] border border-white bg-white p-3 shadow-[0_25px_80px_rgba(48,103,241,0.18)]">
+              <div className="rounded-[21px] bg-[#f3f6ff] p-7 sm:p-9">
+                <div className="flex items-center justify-between"><span className="text-sm font-bold text-[#626b80]">BGW Host dashboard <span className="ml-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#8992a7]">Example</span></span><span className="flex items-center gap-1.5 text-xs font-bold text-[#23835e]"><span className="size-2 rounded-full bg-[#38b47d]" /> All systems go</span></div>
+                <div className="mt-9 rounded-2xl bg-[#1b2340] p-6 text-white shadow-xl"><div className="flex items-start justify-between"><div><p className="text-xs font-medium text-white/55">YOUR WEBSITE</p><p className="mt-2 text-xl font-bold">northstar.studio</p></div><Globe2 className="text-[#8db1ff]" /></div><div className="mt-8 flex items-end justify-between"><div><p className="text-xs text-white/55">Performance</p><p className="mt-1 text-3xl font-bold">99.98<span className="text-lg text-[#8db1ff]">%</span></p></div><div className="flex items-end gap-1">{[20,35,27,48,40,60,52,75,67,92].map((height, index) => <span key={index} className="w-2 rounded-t bg-[#70a0ff]" style={{ height }} />)}</div></div></div>
+                <div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-xl bg-white p-4"><p className="text-xs text-[#8992a7]">Visitors this month</p><p className="mt-2 text-2xl font-bold">12,840</p><p className="mt-1 text-xs font-semibold text-[#23835e]">+18.4%</p></div><div className="rounded-xl bg-white p-4"><p className="text-xs text-[#8992a7]">Page load time</p><p className="mt-2 text-2xl font-bold">0.8s</p><p className="mt-1 text-xs font-semibold text-[#23835e]">Excellent</p></div></div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
+      <section id="features" className="border-y border-[#e9ecf3] bg-white"><div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 sm:grid-cols-3 lg:px-10"><div className="flex items-center gap-4"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#edf3ff] text-[#3067f1]"><Zap size={20} /></span><div><p className="font-bold">Fast by default</p><p className="mt-1 text-sm text-[#747d91]">SSD storage with cPanel and 1-click WordPress.</p></div></div><div className="flex items-center gap-4"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#edf3ff] text-[#3067f1]"><ShieldCheck size={20} /></span><div><p className="font-bold">Secure by default</p><p className="mt-1 text-sm text-[#747d91]">Free SSL certificate on every website.</p></div></div><div className="flex items-center gap-4"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#edf3ff] text-[#3067f1]"><Headphones size={20} /></span><div><p className="font-bold">Real people</p><p className="mt-1 text-sm text-[#747d91]">Help from a real person when you need it.</p></div></div></div></section>
+
+      <section id="plans" className="mx-auto max-w-7xl px-6 py-24 lg:px-10"><div className="flex flex-col justify-between gap-8 sm:flex-row sm:items-end"><div><p className="text-sm font-bold uppercase tracking-[0.16em] text-[#3067f1]">Simple plans</p><h2 className="mt-3 text-4xl font-bold tracking-[-0.05em] sm:text-5xl">Pick your starting point.</h2><p className="mt-4 max-w-xl text-[#747d91]">Every plan includes the essentials. Change plans anytime as your site grows. All prices in Canadian dollars.</p></div><div className="flex items-center rounded-xl border border-[#e1e5ef] bg-white p-1 text-sm font-semibold"><button onClick={() => setBilling('monthly')} className={`rounded-lg px-4 py-2.5 transition ${billing === 'monthly' ? 'bg-[#f0f4ff] text-[#3067f1]' : 'text-[#747d91]'}`}>Monthly</button><button onClick={() => setBilling('yearly')} className={`rounded-lg px-4 py-2.5 transition ${billing === 'yearly' ? 'bg-[#f0f4ff] text-[#3067f1]' : 'text-[#747d91]'}`}>Yearly <span className="ml-1 text-xs text-[#23835e]">2 months free</span></button></div></div>
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">{plans.map((plan) => <article key={plan.id} className={`relative flex flex-col rounded-2xl border bg-white p-7 ${plan.popular ? 'border-[#3067f1] shadow-[0_18px_55px_rgba(48,103,241,0.14)]' : 'border-[#e1e5ef]'}`}>{plan.popular && <span className="absolute -top-3 left-7 rounded-full bg-[#3067f1] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white">Most popular</span>}<h3 className="text-xl font-bold">{plan.name}</h3><p className="mt-3 min-h-12 text-sm leading-6 text-[#747d91]">{plan.description}</p><div className="mt-6 flex items-baseline gap-1"><span className="text-4xl font-bold tracking-[-0.05em]">${formatPrice(billing === 'yearly' ? plan.yearly : plan.monthly)}</span><span className="text-sm text-[#747d91]">/mo {CURRENCY}</span></div><p className="mt-1 text-xs text-[#8992a7]">{billing === 'yearly' ? `$${formatPrice(plan.yearly * 12)} ${CURRENCY} billed once a year` : 'Billed monthly'}</p><Link href={`/signup?plan=${plan.id}&billing=${billing}`} className={`mt-7 inline-flex items-center justify-center rounded-lg px-4 py-3 text-sm font-bold ${plan.popular ? 'bg-[#3067f1] text-white hover:bg-[#2457d7]' : 'border border-[#dfe4ef] text-[#30384d] hover:border-[#b9c8ed]'}`}>Choose {plan.name} <ArrowRight className="ml-2" size={16} /></Link><ul className="mt-7 flex flex-col gap-3 border-t border-[#edf0f5] pt-6 text-sm text-[#626b80]">{plan.features.map((feature) => <li key={feature} className="flex items-center gap-2.5"><Check size={16} className="text-[#3067f1]" /> {feature}</li>)}</ul></article>)}</div></section>
+
+      <section id="domain" className="mx-6 mb-24 overflow-hidden rounded-3xl bg-[#1b2340] lg:mx-auto lg:max-w-7xl"><div className="grid items-center gap-10 px-7 py-12 sm:px-12 lg:grid-cols-[.9fr_1.1fr] lg:px-16 lg:py-16"><div><p className="text-sm font-bold uppercase tracking-[0.16em] text-[#8db1ff]">Make it yours</p><h2 className="mt-3 text-3xl font-bold tracking-[-0.04em] text-white sm:text-4xl">Find your next domain.</h2><p className="mt-4 text-sm leading-6 text-white/60">Search for a memorable name and start building something people remember.</p></div><div><label htmlFor="domain-search" className="sr-only">Search for a domain</label><form onSubmit={searchDomain} className="flex flex-col gap-3 rounded-xl bg-white p-2 sm:flex-row"><input id="domain-search" value={domain} onChange={(event) => setDomain(event.target.value)} placeholder="yourname.com" autoCapitalize="none" spellCheck={false} className="min-w-0 flex-1 rounded-lg px-4 py-3 text-sm text-[#12182b] outline-none placeholder:text-[#a2aabc]" /><button type="submit" className="rounded-lg bg-[#3067f1] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#2457d7]">Claim this domain</button></form><p className="mt-3 text-sm text-white/60">{cleanDomain ? <>Reserve <span className="font-semibold text-[#8db1ff]">{cleanDomain}</span> when you create your account. We&apos;ll confirm it&apos;s available before it goes live.</> : <>Tell us the name you want and we&apos;ll check availability while we set up your hosting.</>}</p></div></div></section>
+
+      <footer id="support" className="border-t border-[#e7eaf2] bg-white"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-6 py-10 text-sm text-[#747d91] sm:flex-row sm:items-center lg:px-10"><div><img src="/brand/bgw-host-logo.png" alt="BGW Host" width={840} height={195} className="h-7 w-auto" /><p className="mt-2">Hosting that gives you room to grow.</p></div><div className="flex flex-wrap gap-x-6 gap-y-2"><a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Host%20support`} className="hover:text-[#3067f1]">Contact support</a><a href="#plans" className="hover:text-[#3067f1]">Pricing</a><Link href="/terms" className="hover:text-[#3067f1]">Terms</Link><Link href="/privacy" className="hover:text-[#3067f1]">Privacy</Link><Link href="/login" className="hover:text-[#3067f1]">Log in</Link></div></div></footer>
     </main>
   )
 }

@@ -1,16 +1,13 @@
 import Link from 'next/link'
-import { Sparkles } from 'lucide-react'
 
 export function Brand({ size = 'md', light = false }: { size?: 'sm' | 'md'; light?: boolean }) {
-  const small = size === 'sm'
+  const logo = (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src="/brand/bgw-host-logo.png" alt="BGW Host" width={840} height={195} className={size === 'sm' ? 'h-7 w-auto' : 'h-9 w-auto'} />
+  )
   return (
-    <Link href="/" className={`flex items-center gap-2 ${light ? 'text-white' : 'text-[#12182b]'}`} aria-label="BGW Host home">
-      <span
-        className={`flex items-center justify-center bg-[#3067f1] text-white shadow-lg shadow-blue-200 ${small ? 'size-7 rounded-lg' : 'size-9 rounded-xl'}`}
-      >
-        <Sparkles size={small ? 14 : 19} fill="currentColor" />
-      </span>
-      <span className={`font-bold tracking-[-0.04em] ${small ? 'text-base' : 'text-[21px]'}`}>BGW <span className={light ? 'text-[#70a0ff]' : 'text-[#3067f1]'}>Host</span></span>
+    <Link href="/" className="flex items-center" aria-label="BGW Host home">
+      {light ? <span className="rounded-xl bg-white px-3 py-2 shadow-lg shadow-blue-950/20">{logo}</span> : logo}
     </Link>
   )
 }
