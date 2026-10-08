@@ -1,7 +1,8 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
-import { ArrowRight, Check, Eye, EyeOff, ShieldCheck, Sparkles, Zap } from 'lucide-react'
+import { ArrowRight, Check, Eye, EyeOff, ShieldCheck, Zap } from 'lucide-react'
 
 export default function Page() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin')
@@ -16,9 +17,10 @@ export default function Page() {
       <section className="relative hidden w-[48%] flex-col justify-between overflow-hidden bg-[#1b2340] p-10 text-white lg:flex xl:p-14">
         <div className="absolute -right-24 top-16 size-72 rounded-full border border-white/10" aria-hidden="true" />
         <div className="absolute -right-8 top-32 size-40 rounded-full border border-white/10" aria-hidden="true" />
-        <a href="#home" className="flex items-center gap-2 text-white" aria-label="BGW Domains home">
-          <span className="flex size-10 items-center justify-center rounded-xl bg-[#3067f1] shadow-xl shadow-blue-950/30"><Sparkles size={20} fill="currentColor" /></span>
-          <span className="text-[22px] font-bold tracking-[-0.04em]">bgwdomains.com</span>
+        <a href="#home" className="flex items-center" aria-label="BGW Domains home">
+          <span className="flex h-14 w-[220px] overflow-hidden rounded-xl bg-white">
+            <Image src="/bgw-domain-logo.png" alt="BGW Domain" width={620} height={184} className="h-[184px] w-[620px] max-w-none -translate-x-[118px] -translate-y-[50px] object-cover" priority />
+          </span>
         </a>
 
         <div className="relative max-w-lg">
@@ -36,9 +38,10 @@ export default function Page() {
 
       <section className="relative flex w-full items-center justify-center px-6 py-10 sm:px-10 lg:w-[52%] lg:px-14 xl:px-24">
         <div className="w-full max-w-[430px]">
-          <a href="#home" className="mb-12 flex items-center justify-center gap-2 lg:hidden" aria-label="BGW Domains home">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-[#3067f1] text-white shadow-lg shadow-blue-200"><Sparkles size={18} fill="currentColor" /></span>
-            <span className="text-[21px] font-bold tracking-[-0.04em]">bgwdomains.com</span>
+          <a href="#home" className="mb-12 flex items-center justify-center lg:hidden" aria-label="BGW Domains home">
+            <span className="flex h-14 w-[220px] overflow-hidden rounded-xl bg-white">
+              <Image src="/bgw-domain-logo.png" alt="BGW Domain" width={620} height={184} className="h-[184px] w-[620px] max-w-none -translate-x-[118px] -translate-y-[50px] object-cover" priority />
+            </span>
           </a>
 
           <div className="mb-9">
