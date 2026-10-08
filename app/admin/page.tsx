@@ -7,7 +7,7 @@ import { Brand } from '@/components/brand'
 import { isAdmin, isStatus, STATUSES, type Status } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
-import { getPlan, priceFor, type Billing } from '@/lib/plans'
+import { formatPrice, getPlan, priceFor, type Billing } from '@/lib/plans'
 
 export const metadata: Metadata = { title: 'Admin — BGW Host', robots: { index: false, follow: false } }
 export const dynamic = 'force-dynamic'
@@ -161,7 +161,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-sm lg:grid-cols-1 lg:gap-1.5">
-                      <p><span className="font-semibold">{plan.name}</span> <span className="text-[#747d91]">· ${priceFor(plan, customer.billing)}/mo, {customer.billing}</span></p>
+                      <p><span className="font-semibold">{plan.name}</span> <span className="text-[#747d91]">· ${formatPrice(priceFor(plan, customer.billing))}/mo, {customer.billing}</span></p>
                       <p className="inline-flex min-w-0 items-center gap-1.5 text-[#626b80]">
                         <Globe2 size={14} className="shrink-0 text-[#8992a7]" />
                         <span className="truncate">{customer.desired_domain ?? <em className="not-italic text-[#a2aabc]">No domain yet</em>}</span>

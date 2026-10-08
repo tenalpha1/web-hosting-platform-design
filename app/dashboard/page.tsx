@@ -6,7 +6,7 @@ import { logout } from '@/app/actions'
 import { Brand } from '@/components/brand'
 import { isAdmin } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
-import { getPlan, priceFor, SUPPORT_EMAIL } from '@/lib/plans'
+import { CURRENCY, formatPrice, getPlan, priceFor, SUPPORT_EMAIL } from '@/lib/plans'
 import { ChangePlan } from './change-plan'
 import { DomainForm } from './domain-form'
 
@@ -101,7 +101,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#3067f1]">Your plan</p>
             <div className="mt-2 flex items-baseline justify-between">
               <h2 id="plan-heading" className="text-2xl font-bold">{plan.name}</h2>
-              <p><span className="text-2xl font-bold tracking-[-0.04em]">${price}</span><span className="text-sm text-[#747d91]">/mo</span></p>
+              <p><span className="text-2xl font-bold tracking-[-0.04em]">${formatPrice(price)}</span><span className="text-sm text-[#747d91]">/mo {CURRENCY}</span></p>
             </div>
             <p className="mt-1 text-xs text-[#8992a7]">Billed {user.billing === 'yearly' ? 'annually' : 'monthly'}</p>
             <ul className="mt-5 flex flex-col gap-2.5 border-t border-[#edf0f5] pt-5 text-sm text-[#626b80]">

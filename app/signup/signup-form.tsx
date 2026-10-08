@@ -6,7 +6,7 @@ import { ArrowRight, Check, Eye, EyeOff } from 'lucide-react'
 import { signup, type FormState } from '@/app/actions'
 import { FormError } from '@/components/auth-shell'
 import { inputClass, labelClass, primaryButtonClass } from '@/components/brand'
-import { plans, priceFor, type Billing, type PlanId } from '@/lib/plans'
+import { CURRENCY, formatPrice, plans, priceFor, type Billing, type PlanId } from '@/lib/plans'
 
 export function SignupForm({
   initialPlan,
@@ -62,7 +62,7 @@ export function SignupForm({
                 )}
                 <span className="block text-sm font-bold">{option.name}</span>
                 <span className="mt-1 block text-lg font-bold tracking-[-0.04em]">
-                  ${priceFor(option, billing)}
+                  ${formatPrice(priceFor(option, billing))}
                   <span className="text-xs font-medium text-[#747d91]">/mo</span>
                 </span>
               </label>
@@ -70,7 +70,7 @@ export function SignupForm({
           })}
         </div>
         <p className="mt-2 text-xs text-[#8992a7]">
-          Billed {billing === 'yearly' ? 'annually' : 'monthly'}. You can change plans anytime.
+          Prices in {CURRENCY}, billed {billing === 'yearly' ? 'annually' : 'monthly'}. You can change plans anytime.
         </p>
       </fieldset>
 

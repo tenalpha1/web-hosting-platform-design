@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { changePlan, type FormState } from '@/app/actions'
-import { plans, priceFor, type Billing, type PlanId } from '@/lib/plans'
+import { formatPrice, plans, priceFor, type Billing, type PlanId } from '@/lib/plans'
 
 export function ChangePlan({ currentPlan, currentBilling }: { currentPlan: PlanId; currentBilling: Billing }) {
   const [state, formAction, pending] = useActionState<FormState, FormData>(changePlan, {})
@@ -47,7 +47,7 @@ export function ChangePlan({ currentPlan, currentBilling }: { currentPlan: PlanI
           <label key={option.id} className={`cursor-pointer rounded-xl border p-3 text-sm ${plan === option.id ? 'border-[#3067f1] ring-3 ring-[#3067f1]/15' : 'border-[#e1e5ef]'}`}>
             <input type="radio" name="plan" value={option.id} checked={plan === option.id} onChange={() => setPlan(option.id)} className="sr-only" />
             <span className="block font-bold">{option.name}</span>
-            <span className="text-[#626b80]">${priceFor(option, billing)}/mo</span>
+            <span className="text-[#626b80]">${formatPrice(priceFor(option, billing))}/mo</span>
           </label>
         ))}
       </div>

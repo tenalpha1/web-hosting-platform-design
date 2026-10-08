@@ -23,8 +23,8 @@ export const plans: Plan[] = [
     id: 'starter',
     name: 'Starter',
     description: 'One website, done right. Perfect for a small business or personal site.',
-    monthly: 5.95,
-    yearly: 4.95,
+    monthly: 8.95,
+    yearly: 7.45,
     diskGb: 1,
     features: ['1 website', '1 GB SSD storage', 'Free SSL certificate', 'Up to 5 email accounts', 'cPanel with 1-click WordPress'],
   },
@@ -32,8 +32,8 @@ export const plans: Plan[] = [
     id: 'plus',
     name: 'Plus',
     description: 'Room for a few sites and a growing inbox.',
-    monthly: 9.95,
-    yearly: 8.25,
+    monthly: 16.5,
+    yearly: 13.75,
     popular: true,
     diskGb: 3,
     features: ['Up to 3 websites', '3 GB SSD storage', 'Free SSL certificates', 'Up to 25 email accounts', 'cPanel with 1-click WordPress'],
@@ -42,8 +42,8 @@ export const plans: Plan[] = [
     id: 'pro',
     name: 'Pro',
     description: 'For busy businesses and people who run several sites.',
-    monthly: 14.95,
-    yearly: 12.45,
+    monthly: 24.9,
+    yearly: 20.75,
     diskGb: 5,
     features: ['Up to 10 websites', '5 GB SSD storage', 'Free SSL certificates', 'Up to 50 email accounts', 'Priority support'],
   },
@@ -70,6 +70,13 @@ export function isBilling(value: unknown): value is Billing {
 export function priceFor(plan: Plan, billing: Billing) {
   return billing === 'yearly' ? plan.yearly : plan.monthly
 }
+
+/** Always show two decimals, e.g. 16.5 -> "16.50". Prices are in Canadian dollars. */
+export function formatPrice(amount: number) {
+  return amount.toFixed(2)
+}
+
+export const CURRENCY = 'CAD'
 
 export const SUPPORT_EMAIL = 'admin@bgwfilmstudios.com'
 export const COMPANY_NAME = 'BGW Film Studios Inc.'
