@@ -18,8 +18,8 @@ export default function Page() {
         <div className="absolute -right-24 top-16 size-72 rounded-full border border-white/10" aria-hidden="true" />
         <div className="absolute -right-8 top-32 size-40 rounded-full border border-white/10" aria-hidden="true" />
         <a href="#home" className="flex items-center" aria-label="BGW Domains home">
-          <span className="flex h-14 w-[220px] overflow-hidden rounded-xl bg-white">
-            <Image src="/bgw-domain-logo.png" alt="BGW Domain" width={620} height={184} className="h-[184px] w-[620px] max-w-none -translate-x-[118px] -translate-y-[50px] object-cover" priority />
+          <span className="flex h-20 w-[300px] items-center justify-center overflow-hidden rounded-xl bg-white px-2">
+            <Image src="/bgw-domain-logo.png" alt="BGW Domain" width={1908} height={568} className="h-auto w-full object-contain" priority />
           </span>
         </a>
 
