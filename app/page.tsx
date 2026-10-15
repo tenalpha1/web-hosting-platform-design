@@ -54,14 +54,20 @@ export default function Page() {
         {menuOpen && <nav className="flex flex-col gap-4 border-t border-[#e7eaf2] bg-white px-6 py-5 text-sm font-semibold md:hidden"><a href="#plans" onClick={() => setMenuOpen(false)}>Hosting</a><a href="#features" onClick={() => setMenuOpen(false)}>Why BGW Domain</a><a href="#support" onClick={() => setMenuOpen(false)}>Support</a><Link href="/login">Log in</Link><Link href="/signup" className="text-[#3067f1]">Get started <ArrowRight className="inline" size={15} /></Link></nav>}
       </header>
 
+      <section className="relative z-[1] mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-10 lg:pt-10">
+        <h1 className="sr-only">BGW Domain — a faster home for your website</h1>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/bgw-domain-banner.jpg" alt="BGW Domain. A faster home for your website. Reliable, secure web hosting for people who want to get online without the technical maze." width={1909} height={560} className="w-full rounded-2xl border border-[#e7eaf2] shadow-[0_18px_55px_rgba(48,103,241,0.12)] sm:rounded-3xl" />
+      </section>
+
       <section id="top" className="relative">
         <div className="absolute -right-32 -top-24 size-[460px] rounded-full bg-[#dce8ff] blur-3xl" aria-hidden="true" />
         <div className="absolute -left-20 top-44 size-[300px] rounded-full bg-[#eee9ff] blur-3xl" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 pb-24 pt-20 lg:grid-cols-[1.03fr_.97fr] lg:px-10 lg:pb-32 lg:pt-28">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 pb-24 pt-14 lg:grid-cols-[1.03fr_.97fr] lg:px-10 lg:pb-32 lg:pt-20">
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#cbd9ff] bg-white px-3.5 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3067f1]"><Zap size={13} fill="currentColor" /> Hosting, made simple</div>
-            <h1 className="max-w-[650px] text-5xl font-bold leading-[1.02] tracking-[-0.065em] text-[#12182b] sm:text-6xl lg:text-[74px]">A faster home<br />for your <span className="text-[#3067f1]">website.</span></h1>
-            <p className="mt-7 max-w-[520px] text-lg leading-8 text-[#626b80]">Reliable, secure web hosting for people who want to get online without the technical maze.</p>
+            <h2 className="max-w-[650px] text-4xl font-bold leading-[1.05] tracking-[-0.055em] text-[#12182b] sm:text-5xl">Everything you need<br />to get <span className="text-[#3067f1]">online.</span></h2>
+            <p className="mt-6 max-w-[520px] text-lg leading-8 text-[#626b80]">Canadian web hosting with cPanel, free SSL, email accounts and 1-click WordPress, from an Indigenous-owned business in British Columbia.</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row"><a href="#plans" className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#3067f1] px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-blue-200 transition hover:-translate-y-1 hover:bg-[#2457d7]">Explore plans <ArrowRight size={17} /></a><a href="#features" className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#dfe4ef] bg-white px-6 py-3.5 text-sm font-bold text-[#30384d] transition hover:border-[#b9c8ed]">See why BGW Domain works</a></div>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-[#626b80]"><span className="inline-flex items-center gap-2"><Check size={16} className="text-[#3067f1]" /> Indigenous-owned Canadian business</span><span className="inline-flex items-center gap-2"><Check size={16} className="text-[#3067f1]" /> Free SSL on every site</span></div>
           </div>
