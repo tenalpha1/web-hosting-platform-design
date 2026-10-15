@@ -63,10 +63,10 @@ export default function Page() {
       <section id="top" className="relative">
         <div className="absolute -right-32 -top-24 size-[460px] rounded-full bg-[#dce8ff] blur-3xl" aria-hidden="true" />
         <div className="absolute -left-20 top-44 size-[300px] rounded-full bg-[#eee9ff] blur-3xl" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 pb-24 pt-14 lg:grid-cols-[1.03fr_.97fr] lg:px-10 lg:pb-32 lg:pt-20">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] items-center gap-14 px-6 pb-24 pt-14 lg:grid-cols-[1.03fr_.97fr] lg:px-10 lg:pb-32 lg:pt-20">
           <div>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#cbd9ff] bg-white px-3.5 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#3067f1]"><Zap size={13} fill="currentColor" /> Hosting, made simple</div>
-            <h2 className="max-w-[650px] text-4xl font-bold leading-[1.05] tracking-[-0.055em] text-[#12182b] sm:text-5xl">Everything you need<br />to get <span className="text-[#3067f1]">online.</span></h2>
+            <h2 className="max-w-[650px] text-4xl font-bold leading-[1.05] tracking-[-0.055em] text-[#12182b] sm:text-5xl">Everything you need <br className="hidden sm:block" />to get <span className="text-[#3067f1]">online.</span></h2>
             <p className="mt-6 max-w-[520px] text-lg leading-8 text-[#626b80]">Canadian web hosting with cPanel, free SSL, email accounts and 1-click WordPress, from an Indigenous-owned business in British Columbia.</p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row"><a href="#plans" className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#3067f1] px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-blue-200 transition hover:-translate-y-1 hover:bg-[#2457d7]">Explore plans <ArrowRight size={17} /></a><a href="#features" className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#dfe4ef] bg-white px-6 py-3.5 text-sm font-bold text-[#30384d] transition hover:border-[#b9c8ed]">See why BGW Domain works</a></div>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium text-[#626b80]"><span className="inline-flex items-center gap-2"><Check size={16} className="text-[#3067f1]" /> Indigenous-owned Canadian business</span><span className="inline-flex items-center gap-2"><Check size={16} className="text-[#3067f1]" /> Free SSL on every site</span></div>
