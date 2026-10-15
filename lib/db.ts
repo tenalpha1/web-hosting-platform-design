@@ -45,6 +45,8 @@ async function ensureSchema() {
   await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS payment_status TEXT NOT NULL DEFAULT 'unpaid'`
   await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS paypal_subscription_id TEXT`
   await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS paid_at TIMESTAMPTZ`
+  // cPanel account created through WHM for this customer.
+  await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS whm_username TEXT`
 }
 
 /** Returns the database client, making sure the tables exist first. */

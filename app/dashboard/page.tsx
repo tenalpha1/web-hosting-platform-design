@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Ban, Check, Clock, CreditCard, Globe2, LifeBuoy, LogOut, Mail, PartyPopper, ShieldCheck, UserRound } from 'lucide-react'
-import { logout } from '@/app/actions'
+import { logout, openCpanel } from '@/app/actions'
 import { Brand } from '@/components/brand'
 import { isAdmin } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
@@ -18,11 +18,11 @@ export const dynamic = 'force-dynamic'
 const cardBase = 'rounded-2xl border p-6 sm:p-7'
 const card = `${cardBase} border-[#e1e5ef] bg-white`
 
-export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ welcome?: string }> }) {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ welcome?: string; cpanel?: string }> }) {
   const user = await getCurrentUser()
   if (!user) redirect('/login')
 
-  const { welcome } = await searchParams
+  const { welcome, cpanel } = await searchParams
   const plan = getPlan(user.plan)
   const price = priceFor(plan, user.billing)
   const firstName = user.name.split(' ')[0]
@@ -66,6 +66,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </div>
         )}
 
+        {cpanel === 'error' && (
+          <p role="alert" className="mb-6 rounded-xl border border-[#f5c2c0] bg-[#fff4f3] px-4 py-3 text-sm font-medium text-[#b42318]">We couldn’t open your cPanel just now. Please try again in a minute, or contact support.</p>
+        )}
         <h1 className="text-3xl font-bold tracking-[-0.05em] sm:text-4xl">Hi {firstName}</h1>
         <p className="mt-2 text-[#626b80]">Here’s everything about your hosting in one place.</p>
 
@@ -101,7 +104,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <DomainForm current={user.desired_domain} />
             <div className="mt-8 flex items-center gap-3 rounded-xl bg-white/5 p-4">
               {ready ? (
-                <><span className="size-2.5 rounded-full bg-[#38b47d]" /><span className="text-sm font-semibold">Live and running</span></>
+                <div className="flex w-full flex-wrap items-center justify-between gap-3">
+                  <span className="inline-flex items-center gap-3"><span className="size-2.5 rounded-full bg-[#38b47d]" /><span className="text-sm font-semibold">Live and running</span></span>
+                  {user.whm_username && (
+                    <form action={openCpanel}>
+                      <button type="submit" className="rounded-lg bg-white px-4 py-2 text-sm font-bold text-[#1b2340] transition hover:bg-[#e8eeff]">Open cPanel →</button>
+                    </form>
+                  )}
+                </div>
               ) : suspended ? (
                 <>
                   <Ban size={18} className="shrink-0 text-[#ffb4ae]" />

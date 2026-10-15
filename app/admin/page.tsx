@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-import { ArrowLeft, Globe2, Mail, Search, Users } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Globe2, Mail, Search, Server, TriangleAlert, Users } from 'lucide-react'
 import { setCustomerStatus } from '@/app/actions'
 import { Brand } from '@/components/brand'
 import { isAdmin, isStatus, STATUSES, type Status } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { whmConfigured } from '@/lib/whm'
 import { PAYMENT_STATUSES } from '@/lib/paypal-plans'
 import { formatPrice, getPlan, priceFor, type Billing } from '@/lib/plans'
 
@@ -23,6 +24,7 @@ type Customer = {
   status: string
   payment_status: string
   paypal_subscription_id: string | null
+  whm_username: string | null
   created_at: string
 }
 
@@ -41,7 +43,7 @@ function formatDate(value: string) {
   return new Date(value).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'America/Vancouver' })
 }
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ status?: string; q?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ status?: string; q?: string; notice?: string; tone?: string }> }) {
   const user = await getCurrentUser()
   if (!user) redirect('/login')
   if (!isAdmin(user)) notFound()
@@ -50,9 +52,13 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const active: 'all' | Status = isStatus(params.status) ? params.status : 'all'
   const query = (params.q ?? '').trim().slice(0, 100)
 
+  const whm = whmConfigured()
+  const notice = (params.notice ?? '').slice(0, 400)
+  const noticeIsError = params.tone === 'error'
+
   const sql = await db()
   const rows = (await sql`
-    SELECT id, name, email, plan, billing, desired_domain, status, payment_status, paypal_subscription_id, created_at
+    SELECT id, name, email, plan, billing, desired_domain, status, payment_status, paypal_subscription_id, whm_username, created_at
     FROM cloudnest_users
     ORDER BY created_at DESC`) as Customer[]
 
@@ -94,7 +100,21 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
       <div className="mx-auto max-w-6xl px-6 py-10">
         <h1 className="text-3xl font-bold tracking-[-0.05em] sm:text-4xl">Customers</h1>
-        <p className="mt-2 text-[#626b80]">Everyone who has signed up for BGW Domain. Mark a customer Live once their hosting is ready.</p>
+        <p className="mt-2 text-[#626b80]">
+          {whm
+            ? 'Everyone who has signed up for BGW Domain. “Create hosting & mark live” makes their cPanel account in WHM automatically.'
+            : 'Everyone who has signed up for BGW Domain. Mark a customer Live once their hosting is ready.'}
+        </p>
+
+        {notice && (
+          <div role="status" className={`mt-6 flex items-start gap-3 rounded-2xl border p-4 text-sm font-medium ${noticeIsError ? 'border-[#f5c2c0] bg-[#fff4f3] text-[#b42318]' : 'border-[#b6e3cc] bg-[#e9f7f0] text-[#1d7a52]'}`}>
+            {noticeIsError ? <TriangleAlert size={18} className="mt-0.5 shrink-0" /> : <CheckCircle2 size={18} className="mt-0.5 shrink-0" />}
+            <p>{notice}</p>
+          </div>
+        )}
+        {!whm && (
+          <p className="mt-4 rounded-xl border border-[#f5d9a3] bg-[#fff6e5] px-4 py-3 text-sm text-[#9a6200]">WHM isn’t connected yet — add <code className="font-mono">WHM_API_TOKEN</code> in Vercel to create hosting accounts from here.</p>
+        )}
 
         <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
@@ -175,6 +195,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                         <Globe2 size={14} className="shrink-0 text-[#8992a7]" />
                         <span className="truncate">{customer.desired_domain ?? <em className="not-italic text-[#a2aabc]">No domain yet</em>}</span>
                       </p>
+                      {customer.whm_username && (
+                        <p className="inline-flex items-center gap-1.5 text-[#626b80]">
+                          <Server size={14} className="shrink-0 text-[#8992a7]" /> cPanel user <span className="font-mono text-[#12182b]">{customer.whm_username}</span>
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex flex-wrap gap-2 lg:justify-end">
@@ -192,7 +217,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                                   : 'rounded-lg border border-[#dfe4ef] px-3.5 py-2 text-sm font-semibold text-[#30384d] transition hover:border-[#b9c8ed]'
                             }
                           >
-                            {option === 'active' ? 'Mark live' : option === 'pending' ? 'Back to setting up' : 'Suspend'}
+                            {option === 'active' ? (whm && !customer.whm_username ? 'Create hosting & mark live' : 'Mark live') : option === 'pending' ? 'Back to setting up' : 'Suspend'}
                           </button>
                         </form>
                       ))}

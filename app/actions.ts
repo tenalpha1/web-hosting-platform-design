@@ -6,6 +6,7 @@ import { createSession, destroySession, getCurrentUser, hashPassword, verifyPass
 import { isAdmin, isStatus } from '@/lib/admin'
 import { db } from '@/lib/db'
 import { getSubscription } from '@/lib/paypal'
+import { cpanelLoginUrl, createAccount, suspendAccount, unsuspendAccount, whmConfigured, WhmError } from '@/lib/whm'
 import { PAYPAL_PLANS } from '@/lib/paypal-plans'
 import { getPlan, isBilling, isPlanId } from '@/lib/plans'
 
@@ -146,20 +147,71 @@ export async function updateDomain(_prev: FormState, formData: FormData): Promis
   return { message: 'Domain saved.' }
 }
 
-/* ---------- Admin: change a customer's hosting status ---------- */
+/* ---------- Admin: change a customer's hosting status (and their cPanel account in WHM) ---------- */
+
+function adminNotice(tone: 'ok' | 'error', message: string): never {
+  redirect(`/admin?${new URLSearchParams({ tone, notice: message.slice(0, 400) })}`)
+}
 
 export async function setCustomerStatus(formData: FormData) {
   const id = Number(text(formData, 'id'))
   const status = text(formData, 'status')
   if (!Number.isInteger(id) || id <= 0 || !isStatus(status)) return
 
-  const user = await getCurrentUser()
-  if (!isAdmin(user)) return
+  const admin = await getCurrentUser()
+  if (!isAdmin(admin)) return
 
   const sql = await db()
-  await sql`UPDATE cloudnest_users SET status = ${status} WHERE id = ${id}`
-  revalidatePath('/admin')
+  const rows = (await sql`SELECT id, name, email, plan, desired_domain, status, whm_username FROM cloudnest_users WHERE id = ${id}`) as {
+    id: number; name: string; email: string; plan: string; desired_domain: string | null; status: string; whm_username: string | null
+  }[]
+  const customer = rows[0]
+  if (!customer) adminNotice('error', 'That customer could not be found.')
+
+  let notice = `${customer.name} is now ${status === 'active' ? 'live' : status === 'suspended' ? 'suspended' : 'back to setting up'}.`
+  let whmUsername = customer.whm_username
+
+  if (whmConfigured()) {
+    try {
+      if (status === 'active' && !whmUsername) {
+        if (!customer.desired_domain) adminNotice('error', `${customer.name} hasn’t chosen a domain yet, so their hosting account can’t be created. Ask them to add one on their dashboard.`)
+        whmUsername = await createAccount({ domain: customer.desired_domain, plan: getPlan(customer.plan).id, email: customer.email })
+        notice = `Hosting account “${whmUsername}” created in WHM for ${customer.desired_domain}, and ${customer.name} is now live.`
+      } else if (status === 'active' && customer.status === 'suspended' && whmUsername) {
+        await unsuspendAccount(whmUsername)
+        notice = `${customer.name}’s hosting is turned back on in WHM, and they’re live again.`
+      } else if (status === 'suspended' && whmUsername) {
+        await suspendAccount(whmUsername)
+        notice = `${customer.name}’s hosting is suspended in WHM.`
+      }
+    } catch (error) {
+      if (error && typeof error === 'object' && 'digest' in error) throw error // let redirects through
+      console.error('[whm] admin action failed', error)
+      adminNotice('error', error instanceof WhmError ? error.message : 'Something went wrong talking to WHM. Nothing was changed.')
+    }
+  } else if (status !== 'pending') {
+    notice += ' (WHM isn’t connected yet, so remember to make the change in WHM yourself.)'
+  }
+
+  await sql`UPDATE cloudnest_users SET status = ${status}, whm_username = ${whmUsername} WHERE id = ${id}`
   revalidatePath('/dashboard')
+  adminNotice('ok', notice)
+}
+
+/* ---------- Customer: open their cPanel without a password ---------- */
+
+export async function openCpanel() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/login')
+  if (!user.whm_username || user.status !== 'active') redirect('/dashboard')
+  let url: string
+  try {
+    url = await cpanelLoginUrl(user.whm_username)
+  } catch (error) {
+    console.error('[whm] cPanel login link failed', error)
+    redirect('/dashboard?cpanel=error')
+  }
+  redirect(url)
 }
 
 /* ---------- Customer: confirm a PayPal subscription after checkout ---------- */
