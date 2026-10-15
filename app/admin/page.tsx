@@ -7,6 +7,7 @@ import { Brand } from '@/components/brand'
 import { isAdmin, isStatus, STATUSES, type Status } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
+import { PAYMENT_STATUSES } from '@/lib/paypal-plans'
 import { formatPrice, getPlan, priceFor, type Billing } from '@/lib/plans'
 
 export const metadata: Metadata = { title: 'Admin — BGW Domain', robots: { index: false, follow: false } }
@@ -20,6 +21,8 @@ type Customer = {
   billing: Billing
   desired_domain: string | null
   status: string
+  payment_status: string
+  paypal_subscription_id: string | null
   created_at: string
 }
 
@@ -49,7 +52,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   const sql = await db()
   const rows = (await sql`
-    SELECT id, name, email, plan, billing, desired_domain, status, created_at
+    SELECT id, name, email, plan, billing, desired_domain, status, payment_status, paypal_subscription_id, created_at
     FROM cloudnest_users
     ORDER BY created_at DESC`) as Customer[]
 
@@ -158,6 +161,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                         <Mail size={13} className="shrink-0" /> {customer.email}
                       </a>
                       <p className="mt-1 text-xs text-[#8992a7]">Signed up {formatDate(customer.created_at)}</p>
+                      <p className="mt-2 flex flex-wrap items-center gap-2 text-xs">
+                        <span className={`rounded-full border px-2 py-0.5 font-bold ${customer.payment_status === 'paid' ? 'border-[#b7e4cc] bg-[#e9f8f0] text-[#23835e]' : customer.payment_status === 'unverified' ? 'border-[#ffd9a0] bg-[#fff6e5] text-[#a15c00]' : 'border-[#e1e5ef] bg-[#f6f7fa] text-[#747d91]'}`}>
+                          {PAYMENT_STATUSES[customer.payment_status as keyof typeof PAYMENT_STATUSES] ?? customer.payment_status}
+                        </span>
+                        {customer.paypal_subscription_id && <span className="font-mono text-[#8992a7]">{customer.paypal_subscription_id}</span>}
+                      </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 text-sm lg:grid-cols-1 lg:gap-1.5">

@@ -19,6 +19,8 @@ export type User = {
   billing: Billing
   desired_domain: string | null
   status: string
+  payment_status: string
+  paypal_subscription_id: string | null
   created_at: string
 }
 
@@ -80,7 +82,7 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
 
   const sql = await db()
   const rows = await sql`
-    SELECT u.id, u.name, u.email, u.plan, u.billing, u.desired_domain, u.status, u.created_at
+    SELECT u.id, u.name, u.email, u.plan, u.billing, u.desired_domain, u.status, u.payment_status, u.paypal_subscription_id, u.created_at
     FROM cloudnest_sessions s
     JOIN cloudnest_users u ON u.id = s.user_id
     WHERE s.token_hash = ${hashToken(token)} AND s.expires_at > NOW()

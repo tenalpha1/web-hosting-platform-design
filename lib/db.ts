@@ -41,6 +41,10 @@ async function ensureSchema() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )`
   await sql`CREATE INDEX IF NOT EXISTS cloudnest_sessions_user_idx ON cloudnest_sessions (user_id)`
+  // Payment tracking (PayPal subscriptions). Added Oct 2026 — additive only.
+  await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS payment_status TEXT NOT NULL DEFAULT 'unpaid'`
+  await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS paypal_subscription_id TEXT`
+  await sql`ALTER TABLE cloudnest_users ADD COLUMN IF NOT EXISTS paid_at TIMESTAMPTZ`
 }
 
 /** Returns the database client, making sure the tables exist first. */

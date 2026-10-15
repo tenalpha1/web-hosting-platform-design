@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation'
 import { createSession, destroySession, getCurrentUser, hashPassword, verifyPassword } from '@/lib/auth'
 import { isAdmin, isStatus } from '@/lib/admin'
 import { db } from '@/lib/db'
-import { isBilling, isPlanId } from '@/lib/plans'
+import { getSubscription } from '@/lib/paypal'
+import { PAYPAL_PLANS } from '@/lib/paypal-plans'
+import { getPlan, isBilling, isPlanId } from '@/lib/plans'
 
 export type FormState = {
   error?: string
@@ -113,6 +115,7 @@ export async function changePlan(_prev: FormState, formData: FormData): Promise<
   try {
     const user = await getCurrentUser()
     if (!user) return { error: 'Your session has ended. Please log in again.' }
+    if (user.payment_status !== 'unpaid') return { error: 'Your plan is already paid for. Please contact support to change it.' }
     const sql = await db()
     await sql`UPDATE cloudnest_users SET plan = ${plan}, billing = ${billing} WHERE id = ${user.id}`
   } catch (error) {
@@ -157,4 +160,48 @@ export async function setCustomerStatus(formData: FormData) {
   await sql`UPDATE cloudnest_users SET status = ${status} WHERE id = ${id}`
   revalidatePath('/admin')
   revalidatePath('/dashboard')
+}
+
+/* ---------- Customer: confirm a PayPal subscription after checkout ---------- */
+
+export async function confirmSubscription(subscriptionId: string): Promise<FormState> {
+  if (typeof subscriptionId !== 'string' || !/^I-[A-Z0-9]{6,40}$/.test(subscriptionId)) {
+    return { error: 'We could not read the PayPal confirmation. Please contact support.' }
+  }
+
+  const user = await getCurrentUser()
+  if (!user) return { error: 'Your session has ended. Please log in again.' }
+  const expectedPlan = PAYPAL_PLANS[getPlan(user.plan).id][user.billing]
+  const sql = await db()
+
+  try {
+    const subscription = await getSubscription(subscriptionId)
+    const ok =
+      subscription &&
+      ['ACTIVE', 'APPROVED'].includes(subscription.status) &&
+      subscription.plan_id === expectedPlan &&
+      (!subscription.custom_id || subscription.custom_id === String(user.id))
+    if (!ok) {
+      console.error('[bgw] subscription did not match', { userId: user.id, subscriptionId, status: subscription?.status, plan: subscription?.plan_id })
+      await sql`UPDATE cloudnest_users SET payment_status = 'unverified', paypal_subscription_id = ${subscriptionId} WHERE id = ${user.id}`
+      revalidatePath('/dashboard')
+      revalidatePath('/admin')
+      return { error: 'PayPal did not confirm this payment for your plan. We’ve saved the details and will check it for you.' }
+    }
+    await sql`
+      UPDATE cloudnest_users
+      SET payment_status = 'paid', paypal_subscription_id = ${subscriptionId}, paid_at = NOW()
+      WHERE id = ${user.id}`
+  } catch (error) {
+    // PayPal unreachable or not configured: keep the ID so the owner can check it by hand.
+    console.error('[bgw] could not verify subscription', error)
+    await sql`UPDATE cloudnest_users SET payment_status = 'unverified', paypal_subscription_id = ${subscriptionId} WHERE id = ${user.id}`
+    revalidatePath('/dashboard')
+    revalidatePath('/admin')
+    return { message: 'Thank you! Your payment was received. We’ll confirm it shortly.' }
+  }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/admin')
+  return { message: 'Payment confirmed. Thank you!' }
 }
