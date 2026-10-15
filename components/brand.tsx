@@ -3,10 +3,10 @@ import Link from 'next/link'
 export function Brand({ size = 'md', light = false }: { size?: 'sm' | 'md'; light?: boolean }) {
   const logo = (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src="/brand/bgw-host-logo.png" alt="BGW Host" width={840} height={195} className={size === 'sm' ? 'h-7 w-auto' : 'h-9 w-auto'} />
+    <img src="/brand/bgw-domain-logo.png" alt="BGW Domain" width={1175} height={256} className={size === 'sm' ? 'h-7 w-auto' : 'h-9 w-auto'} />
   )
   return (
-    <Link href="/" className="flex items-center" aria-label="BGW Host home">
+    <Link href="/" className="flex items-center" aria-label="BGW Domain home">
       {light ? <span className="rounded-xl bg-white px-3 py-2 shadow-lg shadow-blue-950/20">{logo}</span> : logo}
     </Link>
   )

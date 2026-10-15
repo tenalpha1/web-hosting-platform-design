@@ -3,20 +3,20 @@ import Link from 'next/link'
 import { LegalPage } from '@/components/legal-page'
 import { COMPANY_NAME, SUPPORT_EMAIL } from '@/lib/plans'
 
-export const metadata: Metadata = { title: 'Terms of Service — BGW Host' }
+export const metadata: Metadata = { title: 'Terms of Service — BGW Domain' }
 
 export default function TermsPage() {
   return (
     <LegalPage title="Terms of Service" updated="October 7, 2026">
       <p>
-        These terms are an agreement between you and {COMPANY_NAME} (“BGW Host”, “we”, “us”), based in Campbell River,
-        British Columbia. By creating an account or using BGW Host, you agree to them. Please read them, and contact us
+        These terms are an agreement between you and {COMPANY_NAME} (“BGW Domain”, “we”, “us”), based in Campbell River,
+        British Columbia. By creating an account or using BGW Domain, you agree to them. Please read them, and contact us
         if anything is unclear.
       </p>
 
       <h2>1. The service</h2>
       <p>
-        BGW Host provides shared web hosting: storage space for websites and email, managed through a cPanel control
+        BGW Domain provides shared web hosting: storage space for websites and email, managed through a cPanel control
         panel. Each plan has the limits shown on our pricing page (such as storage, number of websites and email
         accounts). We may improve or change features over time, and we’ll tell you before any change that reduces what
         your plan includes.
@@ -45,7 +45,7 @@ export default function TermsPage() {
       </p>
 
       <h2>5. Acceptable use</h2>
-      <p>You may not use BGW Host to:</p>
+      <p>You may not use BGW Domain to:</p>
       <ul>
         <li>break any law, or host content that is illegal, hateful, or that infringes someone else’s copyright or trademark;</li>
         <li>send spam or bulk email that people didn’t ask for;</li>
@@ -73,7 +73,7 @@ export default function TermsPage() {
 
       <h2>8. Limitation of liability</h2>
       <p>
-        To the extent the law allows, BGW Host is not responsible for indirect losses such as lost profits or lost
+        To the extent the law allows, BGW Domain is not responsible for indirect losses such as lost profits or lost
         business, and our total responsibility for any claim is limited to the amount you paid us in the 12 months
         before the claim. Nothing in these terms limits rights you have under consumer protection law that cannot be
         waived.
@@ -95,7 +95,7 @@ export default function TermsPage() {
 
       <h2>12. Contact</h2>
       <p>
-        Questions about these terms? Email <a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Host%20terms`}>{SUPPORT_EMAIL}</a>.
+        Questions about these terms? Email <a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Domain%20terms`}>{SUPPORT_EMAIL}</a>.
       </p>
     </LegalPage>
   )

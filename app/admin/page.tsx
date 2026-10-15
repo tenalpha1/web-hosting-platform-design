@@ -9,7 +9,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { formatPrice, getPlan, priceFor, type Billing } from '@/lib/plans'
 
-export const metadata: Metadata = { title: 'Admin — BGW Host', robots: { index: false, follow: false } }
+export const metadata: Metadata = { title: 'Admin — BGW Domain', robots: { index: false, follow: false } }
 export const dynamic = 'force-dynamic'
 
 type Customer = {
@@ -91,7 +91,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
       <div className="mx-auto max-w-6xl px-6 py-10">
         <h1 className="text-3xl font-bold tracking-[-0.05em] sm:text-4xl">Customers</h1>
-        <p className="mt-2 text-[#626b80]">Everyone who has signed up for BGW Host. Mark a customer Live once their hosting is ready.</p>
+        <p className="mt-2 text-[#626b80]">Everyone who has signed up for BGW Domain. Mark a customer Live once their hosting is ready.</p>
 
         <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[

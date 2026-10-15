@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import { LegalPage } from '@/components/legal-page'
 import { COMPANY_NAME, SUPPORT_EMAIL } from '@/lib/plans'
 
-export const metadata: Metadata = { title: 'Privacy Policy — BGW Host' }
+export const metadata: Metadata = { title: 'Privacy Policy — BGW Domain' }
 
 export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Policy" updated="October 7, 2026">
       <p>
-        BGW Host is a web hosting service operated by {COMPANY_NAME}, an Indigenous-owned company based in Campbell River,
+        BGW Domain is a web hosting service operated by {COMPANY_NAME}, an Indigenous-owned company based in Campbell River,
         British Columbia. We respect your privacy and handle personal information in line with Canada’s Personal
         Information Protection and Electronic Documents Act (PIPEDA). This policy explains what we collect, why, and the
         choices you have.
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
 
       <h2>Who we share it with</h2>
       <p>
-        We use trusted service providers to run BGW Host, such as our website and database hosts and the data centres that
+        We use trusted service providers to run BGW Domain, such as our website and database hosts and the data centres that
         hold customer websites. They may only use your information to provide services to us. Some of these providers
         store data outside Canada, including in the United States, where it may be subject to the laws of that country.
         We may also disclose information if the law requires it.
@@ -64,7 +64,7 @@ export default function PrivacyPage() {
       <h2>Contact us</h2>
       <p>
         Questions or concerns about privacy can be sent to our privacy contact at{' '}
-        <a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Host%20privacy`}>{SUPPORT_EMAIL}</a>. If you’re not satisfied
+        <a href={`mailto:${SUPPORT_EMAIL}?subject=BGW%20Domain%20privacy`}>{SUPPORT_EMAIL}</a>. If you’re not satisfied
         with our answer, you can contact the Office of the Privacy Commissioner of Canada.
       </p>
 

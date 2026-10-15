@@ -118,7 +118,7 @@ export function SignupForm({
       <label className="flex items-start gap-3 text-sm text-[#626b80]">
         <input type="checkbox" name="terms" required className="mt-0.5 size-4 accent-[#3067f1]" />
         <span>
-          I agree to the BGW Host{' '}
+          I agree to the BGW Domain{' '}
           <Link href="/terms" target="_blank" className="font-semibold text-[#3067f1] hover:underline">terms of service</Link> and{' '}
           <Link href="/privacy" target="_blank" className="font-semibold text-[#3067f1] hover:underline">privacy policy</Link>.
         </span>
