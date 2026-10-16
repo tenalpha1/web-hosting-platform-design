@@ -31,7 +31,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const suspended = user.status === 'suspended'
   const admin = isAdmin(user)
   const paid = user.payment_status === 'paid'
-  const paymentReceived = user.payment_status !== 'unpaid'
+  // The owner's own account never needs to pay.
+  const paymentReceived = admin || user.payment_status !== 'unpaid'
   const paypalPlanId = PAYPAL_PLANS[plan.id][user.billing]
 
   return (
@@ -139,8 +140,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <p><span className="text-2xl font-bold tracking-[-0.04em]">${formatPrice(price)}</span><span className="text-sm text-[#747d91]">/mo {CURRENCY}</span></p>
             </div>
             <p className="mt-1 text-xs text-[#8992a7]">Billed {user.billing === 'yearly' ? 'annually' : 'monthly'}</p>
-            <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${paid ? 'bg-[#e9f8f0] text-[#23835e]' : paymentReceived ? 'bg-[#f0f4ff] text-[#3067f1]' : 'bg-[#fff6e5] text-[#a15c00]'}`}>
-              {paid ? <><Check size={13} /> Paid with PayPal</> : paymentReceived ? 'Payment received — confirming' : 'Payment needed'}
+            <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${paid || admin ? 'bg-[#e9f8f0] text-[#23835e]' : paymentReceived ? 'bg-[#f0f4ff] text-[#3067f1]' : 'bg-[#fff6e5] text-[#a15c00]'}`}>
+              {admin && !paid ? <><ShieldCheck size={13} /> Owner account — no payment needed</> : paid ? <><Check size={13} /> Paid with PayPal</> : paymentReceived ? 'Payment received — confirming' : 'Payment needed'}
             </p>
             <ul className="mt-5 flex flex-col gap-2.5 border-t border-[#edf0f5] pt-5 text-sm text-[#626b80]">
               {plan.features.map((feature) => (
