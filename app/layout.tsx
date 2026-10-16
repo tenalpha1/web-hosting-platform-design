@@ -2,10 +2,26 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
+const DESCRIPTION =
+  'Reliable, secure web hosting for people who want to get online without the technical maze. Indigenous-owned and Canadian, from $8.95/month CAD.'
+
 export const metadata: Metadata = {
-  title: 'BGW Domain — Web hosting, made simple',
-  description: 'Fast, secure, and affordable web hosting for growing websites.',
-  generator: 'v0.app',
+  metadataBase: new URL('https://www.bgwdomains.com'),
+  title: 'BGW Domain — A faster home for your website',
+  description: DESCRIPTION,
+  applicationName: 'BGW Domain',
+  openGraph: {
+    type: 'website',
+    siteName: 'BGW Domain',
+    title: 'BGW Domain — A faster home for your website',
+    description: DESCRIPTION,
+    locale: 'en_CA',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BGW Domain — A faster home for your website',
+    description: DESCRIPTION,
+  },
   icons: {
     icon: [
       {

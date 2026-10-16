@@ -12,7 +12,7 @@ import { ChangePlan } from './change-plan'
 import { PayPalSubscribeButton } from './paypal-button'
 import { DomainForm } from './domain-form'
 
-export const metadata: Metadata = { title: 'Your dashboard — BGW Domain' }
+export const metadata: Metadata = { title: 'Your dashboard — BGW Domain', robots: { index: false, follow: false } }
 export const dynamic = 'force-dynamic'
 
 const cardBase = 'rounded-2xl border p-6 sm:p-7'
