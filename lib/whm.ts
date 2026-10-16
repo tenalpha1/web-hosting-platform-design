@@ -115,7 +115,7 @@ export async function removeAccount(username: string) {
     await call('removeacct', { username })
   } catch (error) {
     // Already gone from WHM (e.g. deleted by hand) — treat as done.
-    if (error instanceof WhmError && /does not exist|not exist|no such user|not a valid user/i.test(error.message)) return
+    if (error instanceof WhmError && /does not exist|not exist|no such user|not a valid user|do not have a user|does not own/i.test(error.message)) return
     throw error
   }
 }
