@@ -1,6 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
+import { emailHostingReady, emailPaymentReceived, emailWelcome } from '@/lib/email'
 import { redirect } from 'next/navigation'
 import { createSession, destroySession, getCurrentUser, hashPassword, verifyPassword } from '@/lib/auth'
 import { isAdmin, isStatus } from '@/lib/admin'
@@ -68,6 +70,8 @@ export async function signup(_prev: FormState, formData: FormData): Promise<Form
   } catch (error) {
     return { ...serviceError(error), values }
   }
+
+  after(() => emailWelcome({ name, email, planName: getPlan(plan).name, billing, domain: domain || null }))
 
   redirect('/dashboard?welcome=1')
 }
@@ -194,6 +198,9 @@ export async function setCustomerStatus(formData: FormData) {
   }
 
   await sql`UPDATE cloudnest_users SET status = ${status}, whm_username = ${whmUsername} WHERE id = ${id}`
+  if (status === 'active' && customer.status !== 'active') {
+    after(() => emailHostingReady({ name: customer.name, email: customer.email, domain: customer.desired_domain }))
+  }
   revalidatePath('/dashboard')
   adminNotice('ok', notice)
 }
@@ -278,6 +285,7 @@ export async function confirmSubscription(subscriptionId: string): Promise<FormS
       UPDATE cloudnest_users
       SET payment_status = 'paid', paypal_subscription_id = ${subscriptionId}, paid_at = NOW()
       WHERE id = ${user.id}`
+    after(() => emailPaymentReceived({ name: user.name, email: user.email, planName: getPlan(user.plan).name, domain: user.desired_domain }))
   } catch (error) {
     // PayPal unreachable or not configured: keep the ID so the owner can check it by hand.
     console.error('[bgw] could not verify subscription', error)

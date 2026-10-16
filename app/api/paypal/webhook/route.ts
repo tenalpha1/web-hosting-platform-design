@@ -1,5 +1,7 @@
 import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
+import { after } from 'next/server'
+import { emailSubscriptionProblem } from '@/lib/email'
 import { verifyWebhook } from '@/lib/paypal'
 
 export const dynamic = 'force-dynamic'
@@ -49,11 +51,17 @@ export async function POST(request: Request) {
   if (!status || !subscriptionId) return Response.json({ ok: true, ignored: type })
 
   const sql = await db()
+  const before = (await sql`SELECT payment_status FROM cloudnest_users WHERE paypal_subscription_id = ${subscriptionId}`) as { payment_status: string }[]
   const rows = (await sql`
     UPDATE cloudnest_users
     SET payment_status = ${status}, paid_at = CASE WHEN ${status} = 'paid' THEN NOW() ELSE paid_at END
     WHERE paypal_subscription_id = ${subscriptionId}
-    RETURNING id`) as { id: number }[]
+    RETURNING id, name, email`) as { id: number; name: string; email: string }[]
+  // Email once per change (PayPal can send the same event more than once).
+  if (rows[0] && status !== 'paid' && before[0]?.payment_status !== status) {
+    const customer = rows[0]
+    after(() => emailSubscriptionProblem(customer, status as 'cancelled' | 'paused' | 'failed'))
+  }
   console.log('[paypal webhook]', type, subscriptionId, '→', status, rows.length ? `user ${rows[0].id}` : 'no matching customer')
 
   revalidatePath('/admin')
