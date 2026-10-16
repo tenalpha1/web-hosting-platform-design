@@ -6,7 +6,7 @@ import { createSession, destroySession, getCurrentUser, hashPassword, verifyPass
 import { isAdmin, isStatus } from '@/lib/admin'
 import { db } from '@/lib/db'
 import { getSubscription } from '@/lib/paypal'
-import { cpanelLoginUrl, createAccount, suspendAccount, unsuspendAccount, whmConfigured, WhmError } from '@/lib/whm'
+import { cpanelLoginUrl, createAccount, removeAccount, suspendAccount, unsuspendAccount, whmConfigured, WhmError } from '@/lib/whm'
 import { PAYPAL_PLANS } from '@/lib/paypal-plans'
 import { getPlan, isBilling, isPlanId } from '@/lib/plans'
 
@@ -195,6 +195,40 @@ export async function setCustomerStatus(formData: FormData) {
 
   await sql`UPDATE cloudnest_users SET status = ${status}, whm_username = ${whmUsername} WHERE id = ${id}`
   revalidatePath('/dashboard')
+  adminNotice('ok', notice)
+}
+
+/* ---------- Admin: remove a customer (e.g. a test account) ---------- */
+
+export async function removeCustomer(formData: FormData) {
+  const id = Number(text(formData, 'id'))
+  if (!Number.isInteger(id) || id <= 0) return
+  const admin = await getCurrentUser()
+  if (!isAdmin(admin) || !admin) return
+  if (formData.get('confirm') !== 'yes') adminNotice('error', 'Tick “Yes, remove” to confirm before removing a customer.')
+  if (admin.id === id) adminNotice('error', 'You can’t remove your own account.')
+
+  const sql = await db()
+  const rows = (await sql`SELECT name, whm_username FROM cloudnest_users WHERE id = ${id}`) as { name: string; whm_username: string | null }[]
+  const customer = rows[0]
+  if (!customer) adminNotice('error', 'That customer could not be found.')
+
+  let notice = `${customer.name} has been removed.`
+  if (customer.whm_username && formData.get('hosting') === 'yes') {
+    if (!whmConfigured()) adminNotice('error', 'WHM isn’t connected, so their hosting account can’t be deleted from here.')
+    try {
+      await removeAccount(customer.whm_username)
+      notice = `${customer.name} has been removed, and their hosting account “${customer.whm_username}” was deleted from WHM.`
+    } catch (error) {
+      console.error('[whm] remove failed', error)
+      adminNotice('error', error instanceof WhmError ? error.message : 'Something went wrong talking to WHM. Nothing was removed.')
+    }
+  } else if (customer.whm_username) {
+    notice += ` Their hosting account “${customer.whm_username}” was left in WHM.`
+  }
+
+  await sql`DELETE FROM cloudnest_users WHERE id = ${id}`
+  revalidatePath('/admin')
   adminNotice('ok', notice)
 }
 

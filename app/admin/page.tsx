@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { ArrowLeft, CheckCircle2, Globe2, Mail, Search, Server, TriangleAlert, Users } from 'lucide-react'
-import { setCustomerStatus } from '@/app/actions'
+import { removeCustomer, setCustomerStatus } from '@/app/actions'
 import { Brand } from '@/components/brand'
 import { isAdmin, isStatus, STATUSES, type Status } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
@@ -221,6 +221,25 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                           </button>
                         </form>
                       ))}
+                      {!isAdmin(customer) && (
+                        <details className="group w-full lg:w-auto">
+                          <summary className="cursor-pointer list-none rounded-lg px-2 py-2 text-xs font-semibold text-[#8992a7] hover:text-[#b42318] lg:text-right">Remove…</summary>
+                          <form action={removeCustomer} className="mt-2 flex flex-col gap-2 rounded-xl border border-[#f5c2c0] bg-[#fff8f7] p-3 text-xs text-[#5c2a26] lg:w-64">
+                            <input type="hidden" name="id" value={customer.id} />
+                            <p className="font-semibold">Remove {customer.name} from your customer list?</p>
+                            {customer.whm_username && (
+                              <label className="flex items-start gap-2">
+                                <input type="checkbox" name="hosting" value="yes" className="mt-0.5 accent-[#b42318]" />
+                                <span>Also delete their hosting account <span className="font-mono">{customer.whm_username}</span> in WHM (website, email and files — can’t be undone)</span>
+                              </label>
+                            )}
+                            <label className="flex items-center gap-2">
+                              <input type="checkbox" name="confirm" value="yes" required className="accent-[#b42318]" /> Yes, remove
+                            </label>
+                            <button type="submit" className="rounded-lg bg-[#b42318] px-3 py-2 font-bold text-white transition hover:bg-[#912018]">Remove customer</button>
+                          </form>
+                        </details>
+                      )}
                     </div>
                   </li>
                 )

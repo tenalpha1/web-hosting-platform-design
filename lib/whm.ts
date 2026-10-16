@@ -108,3 +108,14 @@ export async function cpanelLoginUrl(username: string) {
   if (!data?.url) throw new WhmError('WHM did not return a login link.')
   return data.url
 }
+
+/** Permanently deletes a cPanel account and all its files, email and databases. */
+export async function removeAccount(username: string) {
+  try {
+    await call('removeacct', { username })
+  } catch (error) {
+    // Already gone from WHM (e.g. deleted by hand) — treat as done.
+    if (error instanceof WhmError && /does not exist|not exist|no such user|not a valid user/i.test(error.message)) return
+    throw error
+  }
+}
