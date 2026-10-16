@@ -44,7 +44,8 @@ export async function getSubscription(id: string): Promise<PayPalSubscription | 
 
 /** Asks PayPal whether a webhook really came from PayPal. Needs PAYPAL_WEBHOOK_ID in Vercel. */
 export async function verifyWebhook(headers: Headers, event: unknown) {
-  const webhookId = process.env.PAYPAL_WEBHOOK_ID
+  // Live webhook for https://www.bgwdomains.com/api/billing/webhook (not secret).
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID || '7DE16591X6355492V'
   if (!webhookId) throw new PayPalConfigError('PAYPAL_WEBHOOK_ID is not set in Vercel.')
   const token = await accessToken()
   const response = await fetch(`${API}/v1/notifications/verify-webhook-signature`, {
