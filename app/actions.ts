@@ -7,7 +7,7 @@ import { isAdmin, isStatus } from '@/lib/admin'
 import { db } from '@/lib/db'
 import { getSubscription } from '@/lib/paypal'
 import { cpanelLoginUrl, createAccount, removeAccount, suspendAccount, unsuspendAccount, whmConfigured, WhmError } from '@/lib/whm'
-import { PAYPAL_PLANS } from '@/lib/paypal-plans'
+import { hasActiveSubscription, PAYPAL_PLANS } from '@/lib/paypal-plans'
 import { getPlan, isBilling, isPlanId } from '@/lib/plans'
 
 export type FormState = {
@@ -116,7 +116,7 @@ export async function changePlan(_prev: FormState, formData: FormData): Promise<
   try {
     const user = await getCurrentUser()
     if (!user) return { error: 'Your session has ended. Please log in again.' }
-    if (user.payment_status !== 'unpaid') return { error: 'Your plan is already paid for. Please contact support to change it.' }
+    if (hasActiveSubscription(user.payment_status)) return { error: 'Your plan is already paid for. Please contact support to change it.' }
     const sql = await db()
     await sql`UPDATE cloudnest_users SET plan = ${plan}, billing = ${billing} WHERE id = ${user.id}`
   } catch (error) {

@@ -41,3 +41,27 @@ export async function getSubscription(id: string): Promise<PayPalSubscription | 
   if (!response.ok) throw new Error(`PayPal lookup failed (${response.status})`)
   return (await response.json()) as PayPalSubscription
 }
+
+/** Asks PayPal whether a webhook really came from PayPal. Needs PAYPAL_WEBHOOK_ID in Vercel. */
+export async function verifyWebhook(headers: Headers, event: unknown) {
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID
+  if (!webhookId) throw new PayPalConfigError('PAYPAL_WEBHOOK_ID is not set in Vercel.')
+  const token = await accessToken()
+  const response = await fetch(`${API}/v1/notifications/verify-webhook-signature`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      auth_algo: headers.get('paypal-auth-algo'),
+      cert_url: headers.get('paypal-cert-url'),
+      transmission_id: headers.get('paypal-transmission-id'),
+      transmission_sig: headers.get('paypal-transmission-sig'),
+      transmission_time: headers.get('paypal-transmission-time'),
+      webhook_id: webhookId,
+      webhook_event: event,
+    }),
+    cache: 'no-store',
+  })
+  if (!response.ok) return false
+  const data = (await response.json()) as { verification_status?: string }
+  return data.verification_status === 'SUCCESS'
+}

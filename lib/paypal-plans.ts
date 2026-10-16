@@ -15,4 +15,17 @@ export const PAYMENT_STATUSES = {
   unpaid: 'Not paid yet',
   paid: 'Paid',
   unverified: 'Check in PayPal',
+  cancelled: 'Cancelled in PayPal',
+  paused: 'Paused in PayPal',
+  failed: 'Payment failed',
 } as const
+
+/** Statuses where the customer has an active, paying subscription (or one being confirmed). */
+export function hasActiveSubscription(status: string) {
+  return status === 'paid' || status === 'unverified'
+}
+
+/** Statuses the owner should look at. */
+export function needsAttention(status: string) {
+  return status === 'cancelled' || status === 'paused' || status === 'failed' || status === 'unverified'
+}

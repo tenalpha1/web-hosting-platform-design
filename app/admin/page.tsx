@@ -182,7 +182,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                       </a>
                       <p className="mt-1 text-xs text-[#8992a7]">Signed up {formatDate(customer.created_at)}</p>
                       <p className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-                        <span className={`rounded-full border px-2 py-0.5 font-bold ${customer.payment_status === 'paid' ? 'border-[#b7e4cc] bg-[#e9f8f0] text-[#23835e]' : customer.payment_status === 'unverified' ? 'border-[#ffd9a0] bg-[#fff6e5] text-[#a15c00]' : 'border-[#e1e5ef] bg-[#f6f7fa] text-[#747d91]'}`}>
+                        <span className={`rounded-full border px-2 py-0.5 font-bold ${customer.payment_status === 'paid' ? 'border-[#b7e4cc] bg-[#e9f8f0] text-[#23835e]' : customer.payment_status === 'unverified' ? 'border-[#ffd9a0] bg-[#fff6e5] text-[#a15c00]' : ['cancelled', 'paused', 'failed'].includes(customer.payment_status) ? 'border-[#f5c2c0] bg-[#fff4f3] text-[#b42318]' : 'border-[#e1e5ef] bg-[#f6f7fa] text-[#747d91]'}`}>
                           {PAYMENT_STATUSES[customer.payment_status as keyof typeof PAYMENT_STATUSES] ?? customer.payment_status}
                         </span>
                         {customer.paypal_subscription_id && <span className="font-mono text-[#8992a7]">{customer.paypal_subscription_id}</span>}

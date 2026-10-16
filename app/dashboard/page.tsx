@@ -7,7 +7,7 @@ import { Brand } from '@/components/brand'
 import { isAdmin } from '@/lib/admin'
 import { getCurrentUser } from '@/lib/auth'
 import { CURRENCY, formatPrice, getPlan, priceFor, SUPPORT_EMAIL } from '@/lib/plans'
-import { PAYPAL_PLANS } from '@/lib/paypal-plans'
+import { hasActiveSubscription, PAYPAL_PLANS } from '@/lib/paypal-plans'
 import { ChangePlan } from './change-plan'
 import { PayPalSubscribeButton } from './paypal-button'
 import { DomainForm } from './domain-form'
@@ -32,7 +32,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const admin = isAdmin(user)
   const paid = user.payment_status === 'paid'
   // The owner's own account never needs to pay.
-  const paymentReceived = admin || user.payment_status !== 'unpaid'
+  const paymentReceived = admin || hasActiveSubscription(user.payment_status)
+  const lapsed = !admin && ['cancelled', 'paused', 'failed'].includes(user.payment_status)
   const paypalPlanId = PAYPAL_PLANS[plan.id][user.billing]
 
   return (
@@ -79,8 +80,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               <div className="max-w-md">
                 <div className="flex items-center gap-3">
                   <span className="flex size-10 items-center justify-center rounded-xl bg-[#3067f1] text-white"><CreditCard size={19} /></span>
-                  <h2 id="pay-heading" className="text-xl font-bold">Complete your payment</h2>
+                  <h2 id="pay-heading" className="text-xl font-bold">{lapsed ? 'Restart your subscription' : 'Complete your payment'}</h2>
                 </div>
+                {lapsed && (
+                  <p className="mt-3 rounded-lg bg-[#fff4f3] px-3 py-2 text-sm font-medium text-[#b42318]">
+                    {user.payment_status === 'failed' ? 'Your last payment didn’t go through.' : user.payment_status === 'paused' ? 'Your PayPal subscription is paused.' : 'Your PayPal subscription was cancelled.'} Subscribe again below to keep your hosting.
+                  </p>
+                )}
                 <p className="mt-3 text-sm leading-6 text-[#626b80]">
                   {plan.name} plan · <span className="font-semibold text-[#12182b]">${formatPrice(user.billing === 'yearly' ? price * 12 : price)} {CURRENCY}</span> {user.billing === 'yearly' ? 'once a year' : 'every month'}. Pay securely with PayPal or a debit or credit card. You can cancel any time.
                 </p>
@@ -141,7 +147,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </div>
             <p className="mt-1 text-xs text-[#8992a7]">Billed {user.billing === 'yearly' ? 'annually' : 'monthly'}</p>
             <p className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${paid || admin ? 'bg-[#e9f8f0] text-[#23835e]' : paymentReceived ? 'bg-[#f0f4ff] text-[#3067f1]' : 'bg-[#fff6e5] text-[#a15c00]'}`}>
-              {admin && !paid ? <><ShieldCheck size={13} /> Owner account — no payment needed</> : paid ? <><Check size={13} /> Paid with PayPal</> : paymentReceived ? 'Payment received — confirming' : 'Payment needed'}
+              {admin && !paid ? <><ShieldCheck size={13} /> Owner account — no payment needed</> : paid ? <><Check size={13} /> Paid with PayPal</> : paymentReceived ? 'Payment received — confirming' : lapsed ? 'Subscription ended' : 'Payment needed'}
             </p>
             <ul className="mt-5 flex flex-col gap-2.5 border-t border-[#edf0f5] pt-5 text-sm text-[#626b80]">
               {plan.features.map((feature) => (
