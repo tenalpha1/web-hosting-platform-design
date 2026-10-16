@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Terms of Service — BGW Domain' }
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of Service" updated="October 7, 2026">
+    <LegalPage title="Terms of Service" updated="October 15, 2026">
       <p>
         These terms are an agreement between you and {COMPANY_NAME} (“BGW Domain”, “we”, “us”), based in Campbell River,
         British Columbia. By creating an account or using BGW Domain, you agree to them. Please read them, and contact us
@@ -31,10 +31,10 @@ export default function TermsPage() {
 
       <h2>3. Payment and renewal</h2>
       <ul>
-        <li>Plans are paid in advance, monthly or yearly, at the price shown when you sign up or renew.</li>
+        <li>Plans are paid in advance, monthly or yearly, at the price shown when you sign up.</li>
         <li>Plans renew automatically for the same period unless you cancel before the renewal date.</li>
         <li>If a payment is not received, we may suspend your hosting after giving you notice, and close the account if it stays unpaid.</li>
-        <li>We’ll give you at least 30 days’ notice before any price change affects your renewal.</li>
+        <li><strong>Your price is locked in.</strong> As long as your subscription stays active, the price of your plan will not go up when it renews, no matter how many years you stay with us. If you cancel and sign up again later, or switch to a different plan, the price shown at that time applies.</li>
       </ul>
 
       <h2>4. Cancelling</h2>
